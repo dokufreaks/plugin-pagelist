@@ -250,17 +250,14 @@ class helper_plugin_pagelist extends DokuWiki_Plugin {
    * Description - (truncated) auto abstract if not set otherwise
    */
   function _descCell($id){
-    if (!$this->page['desc']){
-      $desc = $this->_getMeta($id, array('description', 'abstract'));
-      $max = $this->column['desc'];
-      if (($max > 1) && (strlen($desc) > $max)) $desc = substr($desc, 0, $max).'…';
-      $this->page['desc'] = $desc;
-    }
+    if (!$this->page['desc']) $this->_getMeta($id, array('description', 'abstract'));
     if (!$this->page['desc']){
       $this->doc .= '<td class="desc">&nbsp;</td>';
       return false;
     } else {
-      $this->doc .= '<td class="desc">'.hsc($this->page['desc']).'</td>';
+      $max = $this->column['desc'];
+      if (($max > 1) && (strlen($desc) > $max)) $desc = substr($desc, 0, $max).'…';
+      $this->doc .= '<td class="desc">'.hsc($desc).'</td>';
       return true;
     }
   }
