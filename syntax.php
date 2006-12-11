@@ -39,6 +39,8 @@ class syntax_plugin_pagelist extends DokuWiki_Syntax_Plugin {
    * Handle the match
    */
   function handle($match, $state, $pos, &$handler){
+    global $ID;
+    
     $match = substr($match, 10, -11);  // strip markup
     $items = explode('*', $match);
     
@@ -47,6 +49,7 @@ class syntax_plugin_pagelist extends DokuWiki_Syntax_Plugin {
     for ($i = 0; $i < $c; $i++){
       if (!preg_match('/\[\[(.+?)\]\]/', $items[$i], $match)) continue;
       list($id, $title) = explode('|', $match[1], 2);
+      resolve_pageid(getNS($ID), $id, $exists);
       
       // page has an image title
       if (($title) && (preg_match('/\{\{(.+?)\}\}/', $title, $match))){
@@ -54,16 +57,18 @@ class syntax_plugin_pagelist extends DokuWiki_Syntax_Plugin {
         list($ext, $mime) = mimetype($image);
         if (!substr($mime, 0, 5) == 'image') $image = '';
         $pages[] = array(
-          'id'    => trim($id),
-          'title' => trim($title),
-          'image' => trim($image)
+          'id'     => $id,
+          'title'  => trim($title),
+          'image'  => trim($image),
+          'exists' => $exists,
         );
         
       // text title (if any)
       } else {
         $pages[] = array(
-          'id'    => trim($id),
-          'title' => trim($title)
+          'id'     => $id,
+          'title'  => trim($title),
+          'exists' => $exists,
         );
       }
     }
@@ -89,7 +94,7 @@ class syntax_plugin_pagelist extends DokuWiki_Syntax_Plugin {
     // for metadata renderer
     } elseif ($mode == 'metadata'){
       foreach ($pages as $page){
-        $renderer->meta['relation']['references'][$page['id']] = true;
+        $renderer->meta['relation']['references'][$page['id']] = $page['exists'];
       }
       return true;
     }
