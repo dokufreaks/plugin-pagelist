@@ -9,9 +9,9 @@
 $meta['style']        = array('multichoice',
                           '_choices' => array('default', 'dokuwiki', 'blind'));
 $meta['showheader']   = array('onoff');
-$meta['showdate']     = array('onoff');
-$meta['showuser']     = array('onoff');
-$meta['showdesc']     = array('onoff');
+$meta['showdate']     = array('multichoice', '_choices' => array('0', '1', '2'));
+$meta['showuser']     = array('multichoice', '_choices' => array('0', '1', '2'));
+$meta['showdesc']     = array('multichoice', '_choices' => array('0', '160', '500'));
 $meta['showcomments'] = array('onoff');
 $meta['showtags']     = array('onoff');
 

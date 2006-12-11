@@ -14,8 +14,17 @@ $lang['style_o_blind']    = 'blind';
 
 $lang['showheader']       = 'show heading line';
 $lang['showdate']         = 'show date column';
+$lang['showdate_o_0']     = 'hide';
+$lang['showdate_o_1']     = 'creation date';
+$lang['showdate_o_2']     = 'modification date';
 $lang['showuser']         = 'show user column';
+$lang['showuser_o_0']     = 'hide';
+$lang['showuser_o_1']     = 'creator';
+$lang['showuser_o_2']     = 'contributors';
 $lang['showdesc']         = 'show description column';
+$lang['showdesc_o_0']     = 'hide';
+$lang['showdesc_o_160']   = 'max. 160 chars';
+$lang['showdesc_o_500']   = 'max. 500 chars';
 $lang['showcomments']     = 'show comments column (Discussion Plugin needed)';
 $lang['showtags']         = 'show tags column (Tag Plugin needed)';
 

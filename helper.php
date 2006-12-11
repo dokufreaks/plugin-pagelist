@@ -211,21 +211,32 @@ class helper_plugin_pagelist extends DokuWiki_Plugin {
   }
   
   /**
-   * Date - last modification if not set otherwise
+   * Date - creation or last modification date if not set otherwise
    */
   function _dateCell($id){    
     global $conf;
-    if (!$this->page['date'])
-      $this->page['date'] = $this->_getMeta($id, array('date', 'modified'));
+    if (!$this->page['date']){
+      if ($this->column['date'] == 2)
+        $this->page['date'] = $this->_getMeta($id, array('date', 'modified'));
+      else
+        $this->page['date'] = $this->_getMeta($id, array('date', 'created'));
+    }
     $this->doc .= '<td class="date">'.date($conf['dformat'], $this->page['date']).'</td>';
     return true;
   }
   
   /**
-   * User - page creator if not set otherwise
+   * User - page creator or contributors if not set otherwise
    */
   function _userCell($id){
-    if (!$this->page['user']) $this->page['user'] = $this->_getMeta($id, 'creator');
+    if (!$this->page['user']){
+      if ($this->column['user'] == 2){
+        $users = $this->_getMeta($id, 'contributor');
+        $this->page['user'] = join(', ', $users);
+      } else {
+        $this->page['user'] = $this->_getMeta($id, 'creator');
+      }
+    }
     if (!$this->page['user']){
       $this->doc .= '<td class="user">&nbsp;</td>';
       return false;
@@ -236,11 +247,15 @@ class helper_plugin_pagelist extends DokuWiki_Plugin {
   }
   
   /**
-   * Description - auto abstract if not set otherwise
+   * Description - (truncated) auto abstract if not set otherwise
    */
   function _descCell($id){
-    if (!$this->page['desc'])
-      $this->page['desc'] = $this->_getMeta($id, array('description', 'abstract'));
+    if (!$this->page['desc']){
+      $desc = $this->_getMeta($id, array('description', 'abstract'));
+      $max = $this->column['desc'];
+      if (($max > 1) && (strlen($desc) > $max)) $desc = substr($desc, 0, $max).'…';
+      $this->page['desc'] = $desc;
+    }
     if (!$this->page['desc']){
       $this->doc .= '<td class="desc">&nbsp;</td>';
       return false;
