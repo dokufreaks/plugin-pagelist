@@ -17,7 +17,7 @@ class syntax_plugin_pagelist extends DokuWiki_Syntax_Plugin {
     return array(
       'author' => 'Esther Brunner',
       'email'  => 'wikidesign@gmail.com',
-      'date'   => '2006-12-10',
+      'date'   => '2006-12-14',
       'name'   => 'Pagelist Plugin',
       'desc'   => 'lists pages',
       'url'    => 'http://www.wikidesign.ch/en/plugin/pagelist/start',
@@ -49,6 +49,8 @@ class syntax_plugin_pagelist extends DokuWiki_Syntax_Plugin {
     for ($i = 0; $i < $c; $i++){
       if (!preg_match('/\[\[(.+?)\]\]/', $items[$i], $match)) continue;
       list($id, $title) = explode('|', $match[1], 2);
+      list($id, $section) = explode('#', $id, 2);
+      if (!$id) $id = $ID;
       resolve_pageid(getNS($ID), $id, $exists);
       
       // page has an image title
@@ -57,18 +59,20 @@ class syntax_plugin_pagelist extends DokuWiki_Syntax_Plugin {
         list($ext, $mime) = mimetype($image);
         if (!substr($mime, 0, 5) == 'image') $image = '';
         $pages[] = array(
-          'id'     => $id,
-          'title'  => trim($title),
-          'image'  => trim($image),
-          'exists' => $exists,
+          'id'      => $id,
+          'section' => cleanID($section),
+          'title'   => trim($title),
+          'image'   => trim($image),
+          'exists'  => $exists,
         );
         
       // text title (if any)
       } else {
         $pages[] = array(
-          'id'     => $id,
-          'title'  => trim($title),
-          'exists' => $exists,
+          'id'      => $id,
+          'section' => cleanID($section),
+          'title'   => trim($title),
+          'exists'  => $exists,
         );
       }
     }
