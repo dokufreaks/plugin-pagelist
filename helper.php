@@ -205,7 +205,7 @@ class helper_plugin_pagelist extends DokuWiki_Plugin {
       if (!$this->page['title']) $this->page['title'] = str_replace('_', ' ', noNS($id));
       $title = hsc($this->page['title']);
     }
-    $this->doc .= '<td class="page"><a href="'.wl($id).
+    $this->doc .= '<td class="page"><a href="'.wl($id);
     if ($this->page['section']) $this->doc .= '#'.$this->page['section'];
     $this->doc .= '" class="wikilink1" title="'.$id.'">'.$title.'</a></td>';
     return true;
