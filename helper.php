@@ -66,7 +66,7 @@ class helper_plugin_pagelist extends DokuWiki_Plugin {
     return array(
       'author' => 'Esther Brunner',
       'email'  => 'wikidesign@gmail.com',
-      'date'   => '2006-12-10',
+      'date'   => '2006-12-15',
       'name'   => 'Pagelist Plugin (helper class)',
       'desc'   => 'Functions to list several pages in a nice looking table',
       'url'    => 'http://www.wikidesign/en/plugin/pagelist/start',
@@ -196,6 +196,16 @@ class helper_plugin_pagelist extends DokuWiki_Plugin {
    * Page title / link to page
    */
   function _pageCell($id){
+  
+    // check for page existence
+    if (!isset($this->page['exists'])){
+      if (!isset($this->page['file'])) $this->page['file'] = wikiFN($id);
+      $this->page['exists'] = @file_exists($this->page['file']);
+    }
+    if ($this->page['exists']) $class = 'wikilink1';
+    else $class = 'wikilink2';
+    
+    // handle image and text titles
     if ($this->page['image']){
       $title = '<img src="'.ml($this->page['image']).'" class="media"';
       if ($this->page['title']) $title .= ' title="'.hsc($this->page['title']).'"'.
@@ -206,9 +216,11 @@ class helper_plugin_pagelist extends DokuWiki_Plugin {
       if (!$this->page['title']) $this->page['title'] = str_replace('_', ' ', noNS($id));
       $title = hsc($this->page['title']);
     }
+    
+    // produce output
     $this->doc .= '<td class="page"><a href="'.wl($id);
     if ($this->page['section']) $this->doc .= '#'.$this->page['section'];
-    $this->doc .= '" class="wikilink1" title="'.$id.'">'.$title.'</a></td>';
+    $this->doc .= '" class="'.$class.'" title="'.$id.'">'.$title.'</a></td>';
     return true;
   }
   
@@ -217,6 +229,11 @@ class helper_plugin_pagelist extends DokuWiki_Plugin {
    */
   function _dateCell($id){    
     global $conf;
+    
+    if (!$this->page['exists']){
+      $this->doc .= '<td class="date">&nbsp;</td>';
+      return false;
+    }
     if (!$this->page['date']){
       if ($this->column['date'] == 2)
         $this->page['date'] = $this->_getMeta($id, array('date', 'modified'));
@@ -234,7 +251,7 @@ class helper_plugin_pagelist extends DokuWiki_Plugin {
     if (!$this->page['user']){
       if ($this->column['user'] == 2){
         $users = $this->_getMeta($id, 'contributor');
-        $this->page['user'] = join(', ', $users);
+        if (is_array($users)) $this->page['user'] = join(', ', $users);
       } else {
         $this->page['user'] = $this->_getMeta($id, 'creator');
       }
@@ -286,6 +303,7 @@ class helper_plugin_pagelist extends DokuWiki_Plugin {
    * Get default value for an unset element
    */
   function _getMeta($id, $key){
+    if (!$this->page['exists']) return false;
     if (!isset($this->_meta)) $this->_meta = p_get_metadata($id);
     if (is_array($key)) return $this->_meta[$key[0]][$key[1]];
     else return $this->_meta[$key];
