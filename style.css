@@ -24,10 +24,6 @@ div.dokuwiki table.blind th {
   background-color: __background_alt__;
 }
 
-div.dokuwiki tr.priority1 { background-color: #fff7e8; }
-div.dokuwiki tr.priority2 { background-color: #fff1d9; }
-div.dokuwiki tr.priority3 { background-color: #ffe9c2; }
-
 div.dokuwiki th.page,
 div.dokuwiki th.date,
 div.dokuwiki th.user,

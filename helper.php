@@ -66,7 +66,7 @@ class helper_plugin_pagelist extends DokuWiki_Plugin {
     return array(
       'author' => 'Esther Brunner',
       'email'  => 'wikidesign@gmail.com',
-      'date'   => '2006-12-15',
+      'date'   => '2006-12-19',
       'name'   => 'Pagelist Plugin (helper class)',
       'desc'   => 'Functions to list several pages in a nice looking table',
       'url'    => 'http://www.wikidesign/en/plugin/pagelist/start',
@@ -139,12 +139,14 @@ class helper_plugin_pagelist extends DokuWiki_Plugin {
       $columns = array('page', 'date', 'user', 'desc');
       foreach ($columns as $col){
         if ($this->column[$col]){
-          $this->doc .= '<th class="'.$col.'">'.hsc($this->getLang($col)).'</th>';
+          if (!$this->header[$col]) $this->header[$col] = hsc($this->getLang($col));
+          $this->doc .= '<th class="'.$col.'">'.$this->header[$col].'</th>';
         }
       }
       foreach ($this->plugins as $plug => $col){
         if ($this->column[$col]){
-          $this->doc .= '<th class="'.$col.'">'.hsc($this->$plug->th()).'</th>';
+          if (!$this->header[$col]) $this->header[$col] = hsc($this->$plug->th());
+          $this->doc .= '<th class="'.$col.'">'.$this->header[$col].'</th>';
         }
       }
       $this->doc .= DOKU_LF.DOKU_TAB.'</tr>'.DOKU_LF;
@@ -230,15 +232,15 @@ class helper_plugin_pagelist extends DokuWiki_Plugin {
   function _dateCell($id){    
     global $conf;
     
-    if (!$this->page['exists']){
-      $this->doc .= '<td class="date">&nbsp;</td>';
-      return false;
-    }
-    if (!$this->page['date']){
+    if (!array_key_exists('date', $this->page)){
       if ($this->column['date'] == 2)
         $this->page['date'] = $this->_getMeta($id, array('date', 'modified'));
       else
         $this->page['date'] = $this->_getMeta($id, array('date', 'created'));
+    }
+    if ((!$this->page['date']) || (!$this->page['exists'])){
+      $this->doc .= '<td class="date">&nbsp;</td>';
+      return false;
     }
     $this->doc .= '<td class="date">'.date($conf['dformat'], $this->page['date']).'</td>';
     return true;
@@ -248,7 +250,7 @@ class helper_plugin_pagelist extends DokuWiki_Plugin {
    * User - page creator or contributors if not set otherwise
    */
   function _userCell($id){
-    if (!$this->page['user']){
+    if (!array_key_exists('user', $this->page)){
       if ($this->column['user'] == 2){
         $users = $this->_getMeta($id, 'contributor');
         if (is_array($users)) $this->page['user'] = join(', ', $users);
@@ -259,17 +261,16 @@ class helper_plugin_pagelist extends DokuWiki_Plugin {
     if (!$this->page['user']){
       $this->doc .= '<td class="user">&nbsp;</td>';
       return false;
-    } else {
-      $this->doc .= '<td class="user">'.hsc($this->page['user']).'</td>';
-      return true;
     }
+    $this->doc .= '<td class="user">'.hsc($this->page['user']).'</td>';
+    return true;
   }
   
   /**
    * Description - (truncated) auto abstract if not set otherwise
    */
   function _descCell($id){
-    if (!$this->page['desc']){
+    if (!array_key_exists('desc', $this->page)){
       $desc = $this->_getMeta($id, array('description', 'abstract'));
     } else {
       $desc = $this->page['desc'];
