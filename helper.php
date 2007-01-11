@@ -59,14 +59,11 @@ class helper_plugin_pagelist extends DokuWiki_Plugin {
     );
   }
   
-  /**
-   * Return some info
-   */
   function getInfo(){
     return array(
       'author' => 'Esther Brunner',
       'email'  => 'wikidesign@gmail.com',
-      'date'   => '2006-12-19',
+      'date'   => '2007-01-12',
       'name'   => 'Pagelist Plugin (helper class)',
       'desc'   => 'Functions to list several pages in a nice looking table',
       'url'    => 'http://www.wikidesign/en/plugin/pagelist/start',
@@ -81,6 +78,11 @@ class helper_plugin_pagelist extends DokuWiki_Plugin {
       'params' => array(
         'plugin name' => 'string',
         'column key' => 'string'),
+    );
+    $result[] = array(
+      'name'   => 'setFlags',
+      'desc'   => 'overrides standard values for showfooter and firstseconly settings',
+      'params' => array('flags' => 'array'),
     );
     $result[] = array(
       'name'   => 'startList',
@@ -105,6 +107,30 @@ class helper_plugin_pagelist extends DokuWiki_Plugin {
   function addColumn($plugin, $col){
     $this->plugins[$plugin] = $col;
     $this->column[$col] = true;
+  }
+  
+  /**
+   * Overrides standard values for showheader and show(column) settings
+   */
+  function setFlags($flags){
+    $colums = array('date', 'user', 'desc', 'comments', 'tags');
+    foreach ($flags as $flag){
+      switch ($flag){
+      case 'header':
+        $this->showheader = true;
+        break;
+      case 'noheader':
+        $this->showheader = false;
+        break;
+      }
+      if (substr($flag, 0, 2) == 'no'){
+        $value = false;
+        $flag  = substr($flag, 2);
+      } else {
+        $value = true;
+      }
+      if (in_array($flag, $columns)) $this->column[$flag] = $value;
+    }
   }
 
   /**
@@ -189,6 +215,10 @@ class helper_plugin_pagelist extends DokuWiki_Plugin {
   function finishList(){
     if (!isset($this->page)) $this->doc = '';
     else $this->doc .= '</table>'.DOKU_LF;
+    
+    // reset defaults
+    $this->helper_plugin_pagelist();
+    
     return $this->doc;
   }
 

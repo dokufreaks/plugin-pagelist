@@ -17,7 +17,7 @@ class syntax_plugin_pagelist extends DokuWiki_Syntax_Plugin {
     return array(
       'author' => 'Esther Brunner',
       'email'  => 'wikidesign@gmail.com',
-      'date'   => '2006-12-14',
+      'date'   => '2007-01-12',
       'name'   => 'Pagelist Plugin',
       'desc'   => 'lists pages',
       'url'    => 'http://www.wikidesign.ch/en/plugin/pagelist/start',
@@ -32,7 +32,7 @@ class syntax_plugin_pagelist extends DokuWiki_Syntax_Plugin {
    * Connect pattern to lexer
    */
   function connectTo($mode){
-    $this->Lexer->addSpecialPattern('<pagelist>.+?</pagelist>', $mode, 'plugin_pagelist');
+    $this->Lexer->addSpecialPattern('<pagelist.+?</pagelist>', $mode, 'plugin_pagelist');
   }
 
   /**
@@ -41,7 +41,9 @@ class syntax_plugin_pagelist extends DokuWiki_Syntax_Plugin {
   function handle($match, $state, $pos, &$handler){
     global $ID;
     
-    $match = substr($match, 10, -11);  // strip markup
+    $match = substr($match, 9, -11);  // strip markup
+    list($flags, $match) = explode('>', $match, 2);
+    $flags = explode('&', substr($flags, 1));
     $items = explode('*', $match);
     
     $pages = array();
@@ -77,17 +79,19 @@ class syntax_plugin_pagelist extends DokuWiki_Syntax_Plugin {
       }
     }
         
-    return $pages;
+    return array($flags, $pages);
   }
 
   /**
    * Create output
    */
-  function render($mode, &$renderer, $pages){
+  function render($mode, &$renderer, $data){
+    list($flags, $pages) = $data;
 
     // for XHTML output
     if ($mode == 'xhtml'){
       if (!$my =& plugin_load('helper', 'pagelist')) return false;
+      $my->setFlags($flags);
       $my->startList();
       foreach($pages as $page){
         $my->addPage($page);
