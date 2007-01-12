@@ -7,7 +7,7 @@
  */
 
 $meta['style']        = array('multichoice',
-                          '_choices' => array('default', 'dokuwiki', 'blind'));
+                          '_choices' => array('default', 'table', 'list'));
 $meta['showheader']   = array('onoff');
 $meta['showdate']     = array('multichoice', '_choices' => array('0', '1', '2'));
 $meta['showuser']     = array('multichoice', '_choices' => array('0', '1', '2'));
