@@ -1,5 +1,5 @@
 div.dokuwiki table.pagelist,
-div.dokuwiki table.blind {
+div.dokuwiki table.ul {
   border: 0;
   padding: 0;
   border-spacing: 0;
@@ -13,14 +13,21 @@ div.dokuwiki table.pagelist tr {
 }
 
 div.dokuwiki table.pagelist th,
-div.dokuwiki table.blind th,
-div.dokuwiki table.pagelist td,
-div.dokuwiki table.blind td {
+div.dokuwiki table.pagelist td {
   padding: 1px 1em 1px 0;
 }
 
+div.dokuwiki table.ul th,
+div.dokuwiki table.ul td {
+  padding: 0 1em 0 0;
+}
+
+div.dokuwiki table.ul ul {
+  margin: 0 0 0 1.5em;
+}
+
 div.dokuwiki table.pagelist th,
-div.dokuwiki table.blind th {
+div.dokuwiki table.ul th {
   background-color: __background_alt__;
 }
 

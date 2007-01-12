@@ -9,8 +9,8 @@
 // for the configuration manager
 $lang['style']            = 'Style of pagelist tables';
 $lang['style_o_default']  = 'default';
-$lang['style_o_dokuwiki'] = 'DokuWiki';
-$lang['style_o_blind']    = 'blind';
+$lang['style_o_table']    = 'table';
+$lang['style_o_list']     = 'list';
 
 $lang['showheader']       = 'show heading line';
 $lang['showdate']         = 'show date column';

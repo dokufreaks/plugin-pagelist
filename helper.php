@@ -20,7 +20,7 @@ class helper_plugin_pagelist extends DokuWiki_Plugin {
                              // can contain: 'title', 'date', 'user', 'desc', 'comments',
                              // 'tags', 'status' and 'priority'
                              
-  var $style      = '';      // table style: 'default', 'dokuwiki', 'blind'
+  var $style      = '';      // table style: 'default', 'table', 'list'
   var $showheader = false;   // show a heading line
   var $column     = array(); // which columns to show
   var $header     = array(); // language strings for table headers
@@ -83,6 +83,7 @@ class helper_plugin_pagelist extends DokuWiki_Plugin {
       'name'   => 'setFlags',
       'desc'   => 'overrides standard values for showfooter and firstseconly settings',
       'params' => array('flags' => 'array'),
+      'return' => array('success' => 'boolean'),
     );
     $result[] = array(
       'name'   => 'startList',
@@ -110,12 +111,23 @@ class helper_plugin_pagelist extends DokuWiki_Plugin {
   }
   
   /**
-   * Overrides standard values for showheader and show(column) settings
+   * Overrides standard values for style, showheader and show(column) settings
    */
   function setFlags($flags){
-    $colums = array('date', 'user', 'desc', 'comments', 'tags');
+    if (!is_array($flags)) return false;
+    
+    $columns = array('date', 'user', 'desc', 'comments', 'tags');
     foreach ($flags as $flag){
       switch ($flag){
+      case 'default':
+        $this->style = 'default';
+        break;
+      case 'table':
+        $this->style = 'table';
+        break;
+      case 'list':
+        $this->style = 'list';
+        break;
       case 'header':
         $this->showheader = true;
         break;
@@ -131,6 +143,7 @@ class helper_plugin_pagelist extends DokuWiki_Plugin {
       }
       if (in_array($flag, $columns)) $this->column[$flag] = $value;
     }
+    return true;
   }
 
   /**
@@ -140,11 +153,11 @@ class helper_plugin_pagelist extends DokuWiki_Plugin {
   
     // table style
     switch ($this->style){
-    case 'dokuwiki':
+    case 'table':
       $class = 'inline';
       break;
-    case 'blind':
-      $class = 'blind';
+    case 'list':
+      $class = 'ul';
       break;
     default:
       $class = 'pagelist';
@@ -250,9 +263,13 @@ class helper_plugin_pagelist extends DokuWiki_Plugin {
     }
     
     // produce output
-    $this->doc .= '<td class="page"><a href="'.wl($id);
+    $this->doc .= '<td class="page">';
+    if ($this->style == 'list') $this->doc .= '<ul><li>';
+    $this->doc .= '<a href="'.wl($id);
     if ($this->page['section']) $this->doc .= '#'.$this->page['section'];
-    $this->doc .= '" class="'.$class.'" title="'.$id.'">'.$title.'</a></td>';
+    $this->doc .= '" class="'.$class.'" title="'.$id.'">'.$title.'</a>';
+    if ($this->style == 'list') $this->doc .= '</ul></li>';
+    $this->doc .= '</td>';
     return true;
   }
   

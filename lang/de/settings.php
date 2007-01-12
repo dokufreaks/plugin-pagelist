@@ -9,8 +9,8 @@
 // for the configuration manager
 $lang['style']            = 'Tabellenstil der Seitenlisten';
 $lang['style_o_default']  = 'standard';
-$lang['style_o_dokuwiki'] = 'DokuWiki';
-$lang['style_o_blind']    = 'rasterlos';
+$lang['style_o_table']    = 'Tabelle';
+$lang['style_o_list']     = 'Liste';
 
 $lang['showheader']       = 'Tabellenkopf anzeigen';
 $lang['showdate']         = 'Datum anzeigen';
