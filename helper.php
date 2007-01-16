@@ -63,7 +63,7 @@ class helper_plugin_pagelist extends DokuWiki_Plugin {
     return array(
       'author' => 'Esther Brunner',
       'email'  => 'wikidesign@gmail.com',
-      'date'   => '2007-01-12',
+      'date'   => '2007-01-16',
       'name'   => 'Pagelist Plugin (helper class)',
       'desc'   => 'Functions to list several pages in a nice looking table',
       'url'    => 'http://www.wikidesign/en/plugin/pagelist/start',
