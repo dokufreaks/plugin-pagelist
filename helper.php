@@ -322,7 +322,7 @@ class helper_plugin_pagelist extends DokuWiki_Plugin {
     } else {
       $desc = $this->page['desc'];
     }
-    if (!$this->page['desc']){
+    if (!$desc){
       $this->doc .= '<td class="desc">&nbsp;</td>';
       return false;
     } else {
