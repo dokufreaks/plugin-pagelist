@@ -206,6 +206,8 @@ class helper_plugin_pagelist extends DokuWiki_Plugin {
     // priority
     if (isset($this->page['priority']))
       $class = ' class="priority'.$this->page['priority'].'"';
+    elseif ($this->page['draft'])
+      $class = ' class="draft"';
     else
       $class = '';
     $this->doc .= DOKU_TAB.'<tr'.$class.'>'.DOKU_LF.DOKU_TAB.DOKU_TAB;
