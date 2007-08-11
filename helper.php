@@ -63,7 +63,7 @@ class helper_plugin_pagelist extends DokuWiki_Plugin {
     return array(
       'author' => 'Esther Brunner',
       'email'  => 'wikidesign@gmail.com',
-      'date'   => '2007-01-16',
+      'date'   => '2007-08-11',
       'name'   => 'Pagelist Plugin (helper class)',
       'desc'   => 'Functions to list several pages in a nice looking table',
       'url'    => 'http://www.wikidesign/en/plugin/pagelist/start',
@@ -210,7 +210,7 @@ class helper_plugin_pagelist extends DokuWiki_Plugin {
       $class = ' class="draft"';
     else
       $class = '';
-    $this->doc .= DOKU_TAB.'<tr'.$class.'>'.DOKU_LF.DOKU_TAB.DOKU_TAB;
+    $this->doc .= DOKU_TAB.'<tr'.$class.'>'.DOKU_LF;
   
     $this->_pageCell($id);    
     if ($this->column['date']) $this->_dateCell($id);
@@ -220,7 +220,7 @@ class helper_plugin_pagelist extends DokuWiki_Plugin {
       if ($this->column[$col]) $this->_pluginCell($plug, $col, $id);
     }
     
-    $this->doc .= DOKU_LF.DOKU_TAB.'</tr>'.DOKU_LF;
+    $this->doc .= DOKU_TAB.'</tr>'.DOKU_LF;
     return true;
   }
   
@@ -265,14 +265,10 @@ class helper_plugin_pagelist extends DokuWiki_Plugin {
     }
     
     // produce output
-    $this->doc .= '<td class="page">';
-    if ($this->style == 'list') $this->doc .= '<ul><li>';
-    $this->doc .= '<a href="'.wl($id);
-    if ($this->page['section']) $this->doc .= '#'.$this->page['section'];
-    $this->doc .= '" class="'.$class.'" title="'.$id.'">'.$title.'</a>';
-    if ($this->style == 'list') $this->doc .= '</ul></li>';
-    $this->doc .= '</td>';
-    return true;
+    $content = '<a href="'.wl($id).($this->page['section'] ? '#'.$this->page['section'] : '').
+      '" class="'.$class.'" title="'.$id.'">'.$title.'</a>';
+    if ($this->style == 'list') $content = '<ul><li>'.$content.'</li></ul>';
+    return $this->_printCell('page', $content);
   }
   
   /**
@@ -287,12 +283,10 @@ class helper_plugin_pagelist extends DokuWiki_Plugin {
       else
         $this->page['date'] = $this->_getMeta($id, array('date', 'created'));
     }
-    if ((!$this->page['date']) || (!$this->page['exists'])){
-      $this->doc .= '<td class="date">&nbsp;</td>';
-      return false;
-    }
-    $this->doc .= '<td class="date">'.date($conf['dformat'], $this->page['date']).'</td>';
-    return true;
+    if ((!$this->page['date']) || (!$this->page['exists']))
+      return $this->_printCell('date', '');
+    else
+      return $this->_printCell('date', date($conf['dformat'], $this->page['date']));
   }
   
   /**
@@ -307,12 +301,7 @@ class helper_plugin_pagelist extends DokuWiki_Plugin {
         $this->page['user'] = $this->_getMeta($id, 'creator');
       }
     }
-    if (!$this->page['user']){
-      $this->doc .= '<td class="user">&nbsp;</td>';
-      return false;
-    }
-    $this->doc .= '<td class="user">'.hsc($this->page['user']).'</td>';
-    return true;
+    return $this->_printCell('user', hsc($this->page['user']));
   }
   
   /**
@@ -324,15 +313,9 @@ class helper_plugin_pagelist extends DokuWiki_Plugin {
     } else {
       $desc = $this->page['desc'];
     }
-    if (!$desc){
-      $this->doc .= '<td class="desc">&nbsp;</td>';
-      return false;
-    } else {
-      $max = $this->column['desc'];
-      if (($max > 1) && (strlen($desc) > $max)) $desc = substr($desc, 0, $max).'…';
-      $this->doc .= '<td class="desc">'.hsc($desc).'</td>';
-      return true;
-    }
+    $max = $this->column['desc'];
+    if (($max > 1) && (strlen($desc) > $max)) $desc = substr($desc, 0, $max).'…';
+    return $this->_printCell('desc', hsc($desc));
   }
 
   /**
@@ -340,12 +323,21 @@ class helper_plugin_pagelist extends DokuWiki_Plugin {
    */
   function _pluginCell($plug, $col, $id){
     if (!isset($this->page[$col])) $this->page[$col] = $this->$plug->td($id);
-    if (!isset($this->page[$col])){
-      $this->doc .= '<td class="'.$col.'">&nbsp;</td>';
-      return false;
+    return $this->_printCell($col, $this->page[$col]);
+  }
+  
+  /**
+   * Produce XHTML cell output
+   */
+  function _printCell($class, $content){
+    if (!$content){
+      $content = '&nbsp;';
+      $empty   = true;
+    } else {
+      $empty   = false;
     }
-    $this->doc .= '<td class="'.$col.'">'.$this->page[$col].'</td>';
-    return true;
+    $this->doc .= DOKU_TAB.DOKU_TAB.'<td class="'.$class.'">'.$content.'</td>'.DOKU_LF;
+    return (!$empty);
   }
   
   
