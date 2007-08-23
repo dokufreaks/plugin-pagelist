@@ -203,7 +203,9 @@ class helper_plugin_pagelist extends DokuWiki_Plugin {
     $this->page = $page;
     $this->_meta = NULL;
     
-    // priority
+    // priority and draft
+    if (!isset($this->page['draft']))
+      $this->page['draft'] = ($this->_getMeta('type') == 'draft');
     if (isset($this->page['priority']))
       $class = ' class="priority'.$this->page['priority'].'"';
     elseif ($this->page['draft'])
@@ -259,7 +261,7 @@ class helper_plugin_pagelist extends DokuWiki_Plugin {
         ' alt="'.hsc($this->page['title']).'"';
       $title .= ' />';
     } else {
-      if (!$this->page['title']) $this->page['title'] = $this->_getMeta($id, 'title');
+      if (!$this->page['title']) $this->page['title'] = $this->_getMeta('title');
       if (!$this->page['title']) $this->page['title'] = str_replace('_', ' ', noNS($id));
       $title = hsc($this->page['title']);
     }
@@ -279,9 +281,9 @@ class helper_plugin_pagelist extends DokuWiki_Plugin {
     
     if (!array_key_exists('date', $this->page)){
       if ($this->column['date'] == 2)
-        $this->page['date'] = $this->_getMeta($id, array('date', 'modified'));
+        $this->page['date'] = $this->_getMeta(array('date', 'modified'));
       else
-        $this->page['date'] = $this->_getMeta($id, array('date', 'created'));
+        $this->page['date'] = $this->_getMeta(array('date', 'created'));
     }
     if ((!$this->page['date']) || (!$this->page['exists']))
       return $this->_printCell('date', '');
@@ -295,10 +297,10 @@ class helper_plugin_pagelist extends DokuWiki_Plugin {
   function _userCell($id){
     if (!array_key_exists('user', $this->page)){
       if ($this->column['user'] == 2){
-        $users = $this->_getMeta($id, 'contributor');
+        $users = $this->_getMeta('contributor');
         if (is_array($users)) $this->page['user'] = join(', ', $users);
       } else {
-        $this->page['user'] = $this->_getMeta($id, 'creator');
+        $this->page['user'] = $this->_getMeta('creator');
       }
     }
     return $this->_printCell('user', hsc($this->page['user']));
@@ -309,7 +311,7 @@ class helper_plugin_pagelist extends DokuWiki_Plugin {
    */
   function _descCell($id){
     if (!array_key_exists('desc', $this->page)){
-      $desc = $this->_getMeta($id, array('description', 'abstract'));
+      $desc = $this->_getMeta(array('description', 'abstract'));
     } else {
       $desc = $this->page['desc'];
     }
@@ -344,9 +346,9 @@ class helper_plugin_pagelist extends DokuWiki_Plugin {
   /**
    * Get default value for an unset element
    */
-  function _getMeta($id, $key){
+  function _getMeta($key){
     if (!$this->page['exists']) return false;
-    if (!isset($this->_meta)) $this->_meta = p_get_metadata($id);
+    if (!isset($this->_meta)) $this->_meta = p_get_metadata($this->page['id']);
     if (is_array($key)) return $this->_meta[$key[0]][$key[1]];
     else return $this->_meta[$key];
   }
