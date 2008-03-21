@@ -288,7 +288,7 @@ class helper_plugin_pagelist extends DokuWiki_Plugin {
     if ((!$this->page['date']) || (!$this->page['exists']))
       return $this->_printCell('date', '');
     else
-      return $this->_printCell('date', date($conf['dformat'], $this->page['date']));
+      return $this->_printCell('date', strftime($conf['dformat'], $this->page['date']));
   }
   
   /**
