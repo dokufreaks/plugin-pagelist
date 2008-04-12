@@ -28,7 +28,8 @@ $lang['showdesc_o_0']    = 'nascondi';
 $lang['showdesc_o_160']  = 'max. 160 caratteri';
 $lang['showdesc_o_500']  = 'max. 500 caratteri';
 
-$lang['showcomments']    = 'Mostra la colonna dei commenti (devi avere installato il Plugin Discussion)';
+$lang['showcomments']    = 'mostra la colonna dei commenti (devi avere installato il Plugin Discussion)';
+$lang['showlinkbacks']   = 'mostra la colonna dei linkback (devi avere installato il Plugin Linkback)';
 $lang['showtags']        = 'mostra la colonna dei tag (devi avere installato il Plugin Tag)';
 
 //Setup VIM: ex: et ts=2 enc=utf-8 :

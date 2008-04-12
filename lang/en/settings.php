@@ -26,6 +26,7 @@ $lang['showdesc_o_0']     = 'hide';
 $lang['showdesc_o_160']   = 'max. 160 chars';
 $lang['showdesc_o_500']   = 'max. 500 chars';
 $lang['showcomments']     = 'show comments column (Discussion Plugin needed)';
+$lang['showlinkbacks']    = 'show linkbacks column (Linkback Plugin needed)';
 $lang['showtags']         = 'show tags column (Tag Plugin needed)';
 
 //Setup VIM: ex: et ts=2 enc=utf-8 :

@@ -26,6 +26,7 @@ $lang['showdesc_o_0']     = 'ausblenden';
 $lang['showdesc_o_160']   = 'max. 160 Zeichen';
 $lang['showdesc_o_500']   = 'max. 500 Zeichen';
 $lang['showcomments']     = 'Kommentare anzeigen (Discussion Plugin wird benötigt)';
+$lang['showlinkbacks']    = 'Linkbacks anzeigen (Linkback Plugin wird benötigt)';
 $lang['showtags']         = 'Tags anzeigen (Tag Plugin wird benötigt)';
 
 //Setup VIM: ex: et ts=2 enc=utf-8 :

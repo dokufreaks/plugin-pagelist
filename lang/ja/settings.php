@@ -26,6 +26,7 @@ $lang['showdesc_o_0']     = '隠す';
 $lang['showdesc_o_160']   = '最大160文字';
 $lang['showdesc_o_500']   = '最大500文字';
 $lang['showcomments']     = 'コメントを表示(Discussionプラグインが必要)';
+$lang['showlinkbacks']    = 'リンクベックを表示(Linkbackプラグインが必要)';
 $lang['showtags']         = 'タグを表示(Tagプラグインが必要)';
 
 //Setup VIM: ex: et ts=2 enc=utf-8 :

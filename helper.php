@@ -2,6 +2,7 @@
 /**
  * @license    GPL 2 (http://www.gnu.org/licenses/gpl.html)
  * @author     Esther Brunner <wikidesign@gmail.com>
+ * @author     Gina Häußge <osd@foosel.net>
  */
 
 // must be run within Dokuwiki
@@ -50,11 +51,13 @@ class helper_plugin_pagelist extends DokuWiki_Plugin {
       'user'     => $this->getConf('showuser'),
       'desc'     => $this->getConf('showdesc'),
       'comments' => $this->getConf('showcomments'),
+      'linkbacks'=> $this->getConf('showlinkbacks'),
       'tags'     => $this->getConf('showtags'),
     );
     
     $this->plugins = array(
       'discussion' => 'comments',
+      'linkback'   => 'linkbacks',
       'tag'        => 'tags',
     );
   }
@@ -116,7 +119,7 @@ class helper_plugin_pagelist extends DokuWiki_Plugin {
   function setFlags($flags){
     if (!is_array($flags)) return false;
     
-    $columns = array('date', 'user', 'desc', 'comments', 'tags');
+    $columns = array('date', 'user', 'desc', 'comments', 'linkbacks', 'tags');
     foreach ($flags as $flag){
       switch ($flag){
       case 'default':

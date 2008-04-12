@@ -13,6 +13,7 @@ $meta['showdate']     = array('multichoice', '_choices' => array('0', '1', '2'))
 $meta['showuser']     = array('multichoice', '_choices' => array('0', '1', '2'));
 $meta['showdesc']     = array('multichoice', '_choices' => array('0', '160', '500'));
 $meta['showcomments'] = array('onoff');
+$meta['showlinkbacks']= array('onoff');
 $meta['showtags']     = array('onoff');
 
 //Setup VIM: ex: et ts=2 enc=utf-8 :
