@@ -17,7 +17,7 @@ class syntax_plugin_pagelist extends DokuWiki_Syntax_Plugin {
     return array(
       'author' => 'Gina Häußge, Michael Klier, Esther Brunner',
       'email'  => 'dokuwiki@chimeric.de',
-      'date'   => '2007-01-12',
+      'date'   => '2008-04-12',
       'name'   => 'Pagelist Plugin',
       'desc'   => 'lists pages',
       'url'    => 'http://wiki.splitbrain.org/plugin:pagelist',
