@@ -44,6 +44,7 @@ class helper_plugin_pagelist extends DokuWiki_Plugin {
     function helper_plugin_pagelist() {
         $this->style      = $this->getConf('style');
         $this->showheader = $this->getConf('showheader');
+        $this->showfirsthl    = $this->getConf('showfirsthl');
 
         $this->column = array(
                 'page'     => true,
@@ -66,7 +67,7 @@ class helper_plugin_pagelist extends DokuWiki_Plugin {
         return array(
                 'author' => 'Gina Häußge, Michael Klier, Esther Brunner',
                 'email'  => 'dokuwiki@chimeric.de',
-                'date'   => '2008-04-12',
+                'date'   => '2008-08-08',
                 'name'   => 'Pagelist Plugin (helper class)',
                 'desc'   => 'Functions to list several pages in a nice looking table',
                 'url'    => 'http://wiki.splitbrain.org/plugin:pagelist',
@@ -136,6 +137,12 @@ class helper_plugin_pagelist extends DokuWiki_Plugin {
                     break;
                 case 'noheader':
                     $this->showheader = false;
+                    break;
+                case 'showfirsthl':
+                    $this->showfirsthl = true;
+                    break;
+                case 'nofirsthl':
+                    $this->showfirsthl = false;
                     break;
             }
             if (substr($flag, 0, 2) == 'no') {
@@ -264,7 +271,13 @@ class helper_plugin_pagelist extends DokuWiki_Plugin {
                 ' alt="'.hsc($this->page['title']).'"';
             $title .= ' />';
         } else {
-            if (!$this->page['title']) $this->page['title'] = $this->_getMeta('title');
+            if (!$this->page['title']) {
+                if($this->showfirsthl) {
+                    $this->page['title'] = $this->_getMeta('title');
+                } else {
+                    $this->page['title'] = $this->id;
+                }
+            }
             if (!$this->page['title']) $this->page['title'] = str_replace('_', ' ', noNS($id));
             $title = hsc($this->page['title']);
         }

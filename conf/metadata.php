@@ -15,5 +15,6 @@ $meta['showdesc']     = array('multichoice', '_choices' => array('0', '160', '50
 $meta['showcomments'] = array('onoff');
 $meta['showlinkbacks']= array('onoff');
 $meta['showtags']     = array('onoff');
+$meta['showfirsthl']  = array('onoff');
 
 //Setup VIM: ex: et ts=2 enc=utf-8 :

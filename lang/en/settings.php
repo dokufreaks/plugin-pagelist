@@ -28,5 +28,6 @@ $lang['showdesc_o_500']   = 'max. 500 chars';
 $lang['showcomments']     = 'show comments column (Discussion Plugin needed)';
 $lang['showlinkbacks']    = 'show linkbacks column (Linkback Plugin needed)';
 $lang['showtags']         = 'show tags column (Tag Plugin needed)';
+$lang['showfirsthl']      = 'show the first headline instead of the page name';
 
 //Setup VIM: ex: et ts=2 enc=utf-8 :
