@@ -138,7 +138,7 @@ class helper_plugin_pagelist extends DokuWiki_Plugin {
                 case 'noheader':
                     $this->showheader = false;
                     break;
-                case 'showfirsthl':
+                case 'firsthl':
                     $this->showfirsthl = true;
                     break;
                 case 'nofirsthl':
