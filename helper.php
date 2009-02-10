@@ -214,14 +214,15 @@ class helper_plugin_pagelist extends DokuWiki_Plugin {
         $this->_meta = NULL;
 
         // priority and draft
-        if (!isset($this->page['draft']))
+        if (!isset($this->page['draft'])) {
             $this->page['draft'] = ($this->_getMeta('type') == 'draft');
-        if (isset($this->page['priority']))
-            $class = ' class="priority'.$this->page['priority'].'"';
-        elseif ($this->page['draft'])
-            $class = ' class="draft"';
-        else
-            $class = '';
+        }
+        $class = '';
+        if (isset($this->page['priority'])) $class .= 'priority'.$this->page['priority']. ' ';
+        if ($this->page['draft']) $class .= 'draft ';
+        if ($this->page['class']) $class .= $this->page['class'];
+        if(!empty($class)) $class = ' class="' . $class . '"';
+
         $this->doc .= DOKU_TAB.'<tr'.$class.'>'.DOKU_LF;
 
         $this->_pageCell($id);    
