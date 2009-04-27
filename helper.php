@@ -226,7 +226,7 @@ class helper_plugin_pagelist extends DokuWiki_Plugin {
         $this->doc .= DOKU_TAB.'<tr'.$class.'>'.DOKU_LF;
 
         $this->_pageCell($id);    
-        if ($this->column['date']) $this->_dateCell($id);
+        if ($this->column['date']) $this->_dateCell();
         if ($this->column['user']) $this->_userCell($id);
         if ($this->column['desc']) $this->_descCell($id);
         foreach ($this->plugins as $plug => $col) {
@@ -293,19 +293,20 @@ class helper_plugin_pagelist extends DokuWiki_Plugin {
     /**
      * Date - creation or last modification date if not set otherwise
      */
-    function _dateCell($id) {    
+    function _dateCell() {    
         global $conf;
 
-        if (!array_key_exists('date', $this->page)) {
-            if ($this->column['date'] == 2)
-                $this->page['date'] = $this->_getMeta(array('date', 'modified'));
-            else
-                $this->page['date'] = $this->_getMeta(array('date', 'created'));
+        if($this->column['date'] == 2) {
+            $this->page['date'] = $this->_getMeta(array('date', 'modified'));
+        } elseif(!$this->page['date'] && $this->page['exist']) {
+            $this->page['date'] = $this->_getMeta(array('date', 'created'));
         }
-        if ((!$this->page['date']) || (!$this->page['exists']))
+
+        if ((!$this->page['date']) || (!$this->page['exists'])) {
             return $this->_printCell('date', '');
-        else
+        } else {
             return $this->_printCell('date', strftime($conf['dformat'], $this->page['date']));
+        }
     }
 
     /**
