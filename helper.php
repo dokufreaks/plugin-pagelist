@@ -227,8 +227,8 @@ class helper_plugin_pagelist extends DokuWiki_Plugin {
 
         $this->_pageCell($id);    
         if ($this->column['date']) $this->_dateCell();
-        if ($this->column['user']) $this->_userCell($id);
-        if ($this->column['desc']) $this->_descCell($id);
+        if ($this->column['user']) $this->_userCell();
+        if ($this->column['desc']) $this->_descCell();
         foreach ($this->plugins as $plug => $col) {
             if ($this->column[$col]) $this->_pluginCell($plug, $col, $id);
         }
@@ -312,7 +312,7 @@ class helper_plugin_pagelist extends DokuWiki_Plugin {
     /**
      * User - page creator or contributors if not set otherwise
      */
-    function _userCell($id) {
+    function _userCell() {
         if (!array_key_exists('user', $this->page)) {
             if ($this->column['user'] == 2) {
                 $users = $this->_getMeta('contributor');
@@ -327,7 +327,7 @@ class helper_plugin_pagelist extends DokuWiki_Plugin {
     /**
      * Description - (truncated) auto abstract if not set otherwise
      */
-    function _descCell($id) {
+    function _descCell() {
         if (!array_key_exists('desc', $this->page)) {
             $desc = $this->_getMeta(array('description', 'abstract'));
         } else {
