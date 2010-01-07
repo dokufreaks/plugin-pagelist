@@ -298,7 +298,7 @@ class helper_plugin_pagelist extends DokuWiki_Plugin {
 
         if($this->column['date'] == 2) {
             $this->page['date'] = $this->_getMeta(array('date', 'modified'));
-        } elseif(!$this->page['date'] && $this->page['exist']) {
+        } elseif(!$this->page['date'] && $this->page['exists']) {
             $this->page['date'] = $this->_getMeta(array('date', 'created'));
         }
 
