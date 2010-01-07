@@ -13,17 +13,6 @@ require_once(DOKU_PLUGIN.'syntax.php');
  
 class syntax_plugin_pagelist extends DokuWiki_Syntax_Plugin {
   
-    function getInfo() {
-        return array(
-                'author' => 'Gina Häußge, Michael Klier, Esther Brunner',
-                'email'  => 'dokuwiki@chimeric.de',
-                'date'   => @file_get_contents(DOKU_PLUGIN . 'pagelist/VERSION'),
-                'name'   => 'Pagelist Plugin (syntax component)',
-                'desc'   => 'lists pages',
-                'url'    => 'http://dokuwiki.org/plugin:pagelist',
-                );
-    }
-
     function getType() { return 'substition';}
     function getPType() { return 'block';}
     function getSort() { return 168; }

@@ -63,17 +63,6 @@ class helper_plugin_pagelist extends DokuWiki_Plugin {
                 );
     }
 
-    function getInfo() {
-        return array(
-                'author' => 'Gina Häußge, Michael Klier, Esther Brunner',
-                'email'  => 'dokuwiki@chimeric.de',
-                'date'   => @file_get_contents(DOKU_PLUGIN . 'pagelist/VERSION'),
-                'name'   => 'Pagelist Plugin (helper component)',
-                'desc'   => 'Functions to list several pages in a nice looking table',
-                'url'    => 'http://dokuwiki.org/plugin:pagelist',
-                );
-    }
-
     function getMethods() {
         $result = array();
         $result[] = array(
