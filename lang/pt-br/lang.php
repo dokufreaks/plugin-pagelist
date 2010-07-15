@@ -3,13 +3,13 @@
  * Arquivo para o português
  *
  * @license    GPL 2 (http://www.gnu.org/licenses/gpl.html)
- * @author     Felipe Castro <fefcas@yahoo.com.br>
+ * @author     Sidnei Neves <sidnei@sidnei.org>
  */
 
-// cadeias customizadas da língua para o pluguim
-$lang['page'] = 'Paĝo';
-$lang['date'] = 'Dato';
-$lang['user'] = 'Uzulo';
-$lang['desc'] = 'Priskribo';
+// cadeias customizadas da língua para o plugin
+$lang['page'] = 'Página';
+$lang['date'] = 'Data';
+$lang['user'] = 'Usuário';
+$lang['desc'] = 'Descrição';
 
-//Setup VIM: ex: et ts=2 enc=utf-8 :
+//Setup Notepad++ enc=utf-8 :
