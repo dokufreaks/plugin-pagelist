@@ -3,12 +3,13 @@
  * Russian language file
  *
  * @license    GPL 2 (http://www.gnu.org/licenses/gpl.html)
- * @author     Malamut (malamut@ubuntu.ru)
+ * @author     Aleksandr Selivanov <alexgearbox@gmail.com>
  */
 
 // custom language strings for the plugin
 $lang['page'] = 'Страница';
-$lang['date'] = 'Дата изменения';
-$lang['user'] = 'Редактор';
+$lang['date'] = 'Дата';
+$lang['user'] = 'Участник';
 $lang['desc'] = 'Описание';
-//vim:ts=4:sw=4:et:enc=utf-8
+
+//Setup VIM: ex: et ts=2 enc=utf-8 :
