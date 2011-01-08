@@ -28,5 +28,6 @@ $lang['showdesc_o_500']   = 'max. 500 Zeichen';
 $lang['showcomments']     = 'Kommentare anzeigen (Discussion Plugin wird benötigt)';
 $lang['showlinkbacks']    = 'Linkbacks anzeigen (Linkback Plugin wird benötigt)';
 $lang['showtags']         = 'Tags anzeigen (Tag Plugin wird benötigt)';
+$lang['showfirsthl']      = 'Erste Überschrift anstelle des Seitennamens anzeigen';
 
 //Setup VIM: ex: et ts=2 enc=utf-8 :
