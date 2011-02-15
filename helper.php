@@ -323,7 +323,7 @@ class helper_plugin_pagelist extends DokuWiki_Plugin {
             $desc = $this->page['desc'];
         }
         $max = $this->column['desc'];
-        if (($max > 1) && (strlen($desc) > $max)) $desc = substr($desc, 0, $max).'…';
+        if (($max > 1) && (utf8_strlen($desc) > $max)) $desc = utf8_substr($desc, 0, $max).'…';
         return $this->_printCell('desc', hsc($desc));
     }
 
