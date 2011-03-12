@@ -25,7 +25,8 @@ class helper_plugin_pagelist extends DokuWiki_Plugin {
     var $showheader = false;   // show a heading line
     var $column     = array(); // which columns to show
     var $header     = array(); // language strings for table headers
-
+	var $sort       = false;   // alphabetical sort of pages by pagename
+	
     var $plugins    = array(); // array of plugins to extend the pagelist
     var $discussion = NULL;    // discussion class object
     var $tag        = NULL;    // tag class object
@@ -45,7 +46,8 @@ class helper_plugin_pagelist extends DokuWiki_Plugin {
         $this->style      = $this->getConf('style');
         $this->showheader = $this->getConf('showheader');
         $this->showfirsthl    = $this->getConf('showfirsthl');
-
+		$this->sort       = $this->getConf('sort');
+		
         $this->column = array(
                 'page'     => true,
                 'date'     => $this->getConf('showdate'),
@@ -133,13 +135,21 @@ class helper_plugin_pagelist extends DokuWiki_Plugin {
                 case 'nofirsthl':
                     $this->showfirsthl = false;
                     break;
+                case 'sort':
+                	$this->sort = true;
+                	break;
+                case 'nosort':
+                	$this->sort = false;
+                	break;
             }
+
             if (substr($flag, 0, 2) == 'no') {
                 $value = false;
                 $flag  = substr($flag, 2);
             } else {
                 $value = true;
             }
+            
             if (in_array($flag, $columns)) $this->column[$flag] = $value;
         }
         return true;
@@ -359,5 +369,6 @@ class helper_plugin_pagelist extends DokuWiki_Plugin {
         if (is_array($key)) return $this->_meta[$key[0]][$key[1]];
         else return $this->_meta[$key];
     }
+
 }
-// vim:ts=4:sw=4:et:enc=utf-8: 
+// vim:ts=4:sw=4:et: 

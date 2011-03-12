@@ -81,6 +81,13 @@ class syntax_plugin_pagelist extends DokuWiki_Syntax_Plugin {
             if (!$my =& plugin_load('helper', 'pagelist')) return false;
             $my->setFlags($flags);
             $my->startList();
+            
+            if($my->sort) {		// pages should be sorted by pagename
+            	$keys = array();
+            	$fnc = create_function('$a, $b', 'return strcmp(noNS($a["id"]), noNS($b["id"])); ');
+            	usort($pages, $fnc);
+            }
+            
             foreach($pages as $page) {
                 $my->addPage($page);
             }
@@ -97,4 +104,4 @@ class syntax_plugin_pagelist extends DokuWiki_Syntax_Plugin {
         return false;
     }
 }
-// vim:ts=4:sw=4:et:enc=utf-8: 
+// vim:ts=4:sw=4:et: 

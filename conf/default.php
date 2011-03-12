@@ -11,5 +11,6 @@ $conf['showcomments'] = 0;
 $conf['showlinkbacks']= 0;
 $conf['showtags']     = 0;
 $conf['showfirsthl']  = 1;
+$conf['sort']         = 0;
 
-//Setup VIM: ex: et ts=2 enc=utf-8 :
+//Setup VIM: ex: et ts=2 :
