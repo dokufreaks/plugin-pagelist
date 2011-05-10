@@ -39,7 +39,7 @@ class syntax_plugin_pagelist extends DokuWiki_Syntax_Plugin {
         $c = count($items);
         for ($i = 0; $i < $c; $i++) {
             if (!preg_match('/\[\[(.+?)\]\]/', $items[$i], $match)) continue;
-            list($id, $title) = explode('|', $match[1], 2);
+            list($id, $title, $description) = explode('|', $match[1], 3);
             list($id, $section) = explode('#', $id, 2);
             if (!$id) $id = $ID;
             resolve_pageid(getNS($ID), $id, $exists);
@@ -50,20 +50,22 @@ class syntax_plugin_pagelist extends DokuWiki_Syntax_Plugin {
                 list($ext, $mime) = mimetype($image);
                 if (!substr($mime, 0, 5) == 'image') $image = '';
                 $pages[] = array(
-                        'id'      => $id,
-                        'section' => cleanID($section),
-                        'title'   => trim($title),
-                        'image'   => trim($image),
-                        'exists'  => $exists,
+                        'id'          => $id,
+                        'section'     => cleanID($section),
+                        'title'       => trim($title),
+                        'image'       => trim($image),
+                        'description' => trim($description), // Holds the added parameter for own descriptions
+                        'exists'      => $exists,
                         );
 
             // text title (if any)
             } else {
                 $pages[] = array(
-                        'id'      => $id,
-                        'section' => cleanID($section),
-                        'title'   => trim($title),
-                        'exists'  => $exists,
+                        'id'          => $id,
+                        'section'     => cleanID($section),
+                        'title'       => trim($title),
+                        'description' => trim($description), // Holds the added parameter for own descriptions
+                        'exists'      => $exists,
                         );
             }
         }

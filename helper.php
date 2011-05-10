@@ -327,11 +327,16 @@ class helper_plugin_pagelist extends DokuWiki_Plugin {
      * Description - (truncated) auto abstract if not set otherwise
      */
     function _descCell() {
-        if (!array_key_exists('desc', $this->page)) {
-            $desc = $this->_getMeta(array('description', 'abstract'));
-        } else {
+        if (array_key_exists('desc', $this->page)) {
             $desc = $this->page['desc'];
+        } elseif (strlen($this->page['description']) > 0) {
+            // This condition will become true, when a page-description is given
+            // inside the syntax-block
+            $desc = $this->page['description'];
+        } else {
+            $desc = $this->_getMeta(array('description', 'abstract'));
         }
+        
         $max = $this->column['desc'];
         if (($max > 1) && (utf8_strlen($desc) > $max)) $desc = utf8_substr($desc, 0, $max).'…';
         return $this->_printCell('desc', hsc($desc));
