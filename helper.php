@@ -271,13 +271,12 @@ class helper_plugin_pagelist extends DokuWiki_Plugin {
                 ' alt="'.hsc($this->page['title']).'"';
             $title .= ' />';
         } else {
-            if (!$this->page['title']) {
-                if($this->showfirsthl) {
-                    $this->page['title'] = $this->_getMeta('title');
-                } else {
-                    $this->page['title'] = $this->id;
-                }
+            if($this->showfirsthl) {
+                $this->page['title'] = $this->_getMeta('title');
+            } else {
+                $this->page['title'] = $this->id;
             }
+
             if (!$this->page['title']) $this->page['title'] = str_replace('_', ' ', noNS($id));
             $title = hsc($this->page['title']);
         }
