@@ -30,5 +30,6 @@ $lang['showlinkbacks']    = 'Linkbacks anzeigen (Linkback Plugin wird benötigt)
 $lang['showtags']         = 'Tags anzeigen (Tag Plugin wird benötigt)';
 $lang['showfirsthl']      = 'Erste Überschrift anstatt des Seitennamens anzeigen';
 $lang['sort']             = 'Seiten alphabetisch nach Namen sortieren';
+$lang['rsort']            = 'Seiten in umgekehrter alphabetischer Reihenfolge nach Namen sortieren';
 
 //Setup VIM: ex: et ts=2 :
