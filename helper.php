@@ -48,6 +48,7 @@ class helper_plugin_pagelist extends DokuWiki_Plugin {
         $this->showheader  = $this->getConf('showheader');
         $this->showfirsthl = $this->getConf('showfirsthl');
 		$this->sort        = $this->getConf('sort');
+		$this->rsort       = $this->getConf('rsort');
 		
         $this->column = array(
                 'page'     => true,
@@ -103,7 +104,7 @@ class helper_plugin_pagelist extends DokuWiki_Plugin {
      */
     function addColumn($plugin, $col) {
         $this->plugins[$plugin] = $col;
-        $this->column[$col] = true;
+        $this->column[$col]     = true;
     }
 
     /**
@@ -208,8 +209,6 @@ class helper_plugin_pagelist extends DokuWiki_Plugin {
 
     /**
      * Sets a list row
-     *
-     * @param $page An array which holds the page id and meta information
      */
     function addPage($page) {
 
@@ -349,13 +348,8 @@ class helper_plugin_pagelist extends DokuWiki_Plugin {
 
     /**
      * Plugins - respective plugins must be installed!
-     *
-     * @param $plug Name of the plugin if it has to be called to fetch the content
-     * @param $col Name of the column where to content has to be put in
-     * @param $id Name of the page to pass it as a parameter when fetching the content
      */
     function _pluginCell($plug, $col, $id) {
-        // If no content for the additional cell is given, fetch it directly from the plugin
         if (!isset($this->page[$col])) $this->page[$col] = $this->$plug->td($id);
         return $this->_printCell($col, $this->page[$col]);
     }

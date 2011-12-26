@@ -84,7 +84,7 @@ class syntax_plugin_pagelist extends DokuWiki_Syntax_Plugin {
             $my->setFlags($flags);
             $my->startList();
             
-            if($my->sort || $my>rsort) {		// pages should be sorted by pagename
+            if($my->sort || $my->rsort) {		// pages should be sorted by pagename
             	$keys = array();
             	$fnc = create_function('$a, $b', 'return strcmp(noNS($a["id"]), noNS($b["id"])); ');
             	usort($pages, $fnc);

@@ -12,5 +12,6 @@ $conf['showlinkbacks']= 0;
 $conf['showtags']     = 0;
 $conf['showfirsthl']  = 1;
 $conf['sort']         = 0;
+$conf['rsort']        = 0;
 
 //Setup VIM: ex: et ts=2 :
