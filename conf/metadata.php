@@ -17,5 +17,6 @@ $meta['showlinkbacks']= array('onoff');
 $meta['showtags']     = array('onoff');
 $meta['showfirsthl']  = array('onoff');
 $meta['sort']         = array('onoff');
+$meta['rsort']        = array('onoff');
 
 //Setup VIM: ex: et ts=2 :

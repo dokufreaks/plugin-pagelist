@@ -30,5 +30,6 @@ $lang['showlinkbacks']    = 'show linkbacks column (Linkback Plugin needed)';
 $lang['showtags']         = 'show tags column (Tag Plugin needed)';
 $lang['showfirsthl']      = 'show the first headline instead of the page name';
 $lang['sort']             = 'sort pages by pagename';
+$lang['rsort']            = 'reverse sort pages by pagename';
 
 //Setup VIM: ex: et ts=2 :

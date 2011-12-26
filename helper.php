@@ -26,6 +26,7 @@ class helper_plugin_pagelist extends DokuWiki_Plugin {
     var $column     = array(); // which columns to show
     var $header     = array(); // language strings for table headers
 	var $sort       = false;   // alphabetical sort of pages by pagename
+	var $rsort      = false;   // reverse alphabetical sort of pages by pagename
 	
     var $plugins    = array(); // array of plugins to extend the pagelist
     var $discussion = NULL;    // discussion class object
@@ -43,10 +44,11 @@ class helper_plugin_pagelist extends DokuWiki_Plugin {
      * These can be overriden by plugins using this class
      */
     function helper_plugin_pagelist() {
-        $this->style      = $this->getConf('style');
-        $this->showheader = $this->getConf('showheader');
-        $this->showfirsthl    = $this->getConf('showfirsthl');
-		$this->sort       = $this->getConf('sort');
+        $this->style       = $this->getConf('style');
+        $this->showheader  = $this->getConf('showheader');
+        $this->showfirsthl = $this->getConf('showfirsthl');
+		$this->sort        = $this->getConf('sort');
+		$this->rsort       = $this->getConf('rsort');
 		
         $this->column = array(
                 'page'     => true,
@@ -102,7 +104,7 @@ class helper_plugin_pagelist extends DokuWiki_Plugin {
      */
     function addColumn($plugin, $col) {
         $this->plugins[$plugin] = $col;
-        $this->column[$col] = true;
+        $this->column[$col]     = true;
     }
 
     /**
@@ -138,6 +140,9 @@ class helper_plugin_pagelist extends DokuWiki_Plugin {
                 case 'sort':
                 	$this->sort = true;
                 	break;
+                case 'rsort':
+                    $this->rsort = true;
+                    break;
                 case 'nosort':
                 	$this->sort = false;
                 	break;
