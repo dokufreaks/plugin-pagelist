@@ -410,7 +410,7 @@ class helper_plugin_pagelist extends DokuWiki_Plugin {
      */
     function _getMeta($key) {
         if (!$this->page['exists']) return false;
-        if (!isset($this->_meta)) $this->_meta = p_get_metadata($this->page['id']);
+        if (!isset($this->_meta)) $this->_meta = p_get_metadata($this->page['id'], '', METADATA_RENDER_USING_CACHE);
         if (is_array($key)) return $this->_meta[$key[0]][$key[1]];
         else return $this->_meta[$key];
     }
