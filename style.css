@@ -15,11 +15,13 @@ div.dokuwiki table.pagelist tr {
 div.dokuwiki table.pagelist th,
 div.dokuwiki table.pagelist td {
   padding: 1px 1em 1px 0;
+  border: none;
 }
 
 div.dokuwiki table.ul th,
 div.dokuwiki table.ul td {
   padding: 0 1em 0 0;
+  border: none;
 }
 
 div.dokuwiki table.ul ul {
