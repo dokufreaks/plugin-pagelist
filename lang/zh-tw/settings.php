@@ -3,7 +3,7 @@
  * Traditional Chinese language file
  *
  * @license    GPL 2 (http://www.gnu.org/licenses/gpl.html)
- * @author     Danny Lin <danny0838@pchome.com.tw>
+ * @author     Danny Lin <danny0838@gmail.com>
  */
  
 // for the configuration manager
@@ -29,5 +29,7 @@ $lang['showcomments']     = '顯示意見欄 (需要 Discussion 插件)';
 $lang['showlinkbacks']    = '顯示反向連結欄 (需要 Linkback 插件)';
 $lang['showtags']         = '顯示標籤欄 (需要 Tag 插件)';
 $lang['showfirsthl']      = '顯示第一標題而非頁面名稱';
+$lang['sort']             = '按頁面名稱排序';
+$lang['rsort']            = '按頁面名稱反向排序';
 
 //Setup VIM: ex: et ts=2 enc=utf-8 :
