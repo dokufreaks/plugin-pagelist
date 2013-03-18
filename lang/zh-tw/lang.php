@@ -3,7 +3,7 @@
  * Traditional Chinese language file
  *
  * @license    GPL 2 (http://www.gnu.org/licenses/gpl.html)
- * @author     Danny Lin <danny0838@pchome.com.tw>
+ * @author     Danny Lin <danny0838@gmail.com>
  */
 
 // custom language strings for the plugin
