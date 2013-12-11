@@ -184,7 +184,7 @@ class helper_plugin_pagelist extends DokuWiki_Plugin {
         }
         
         if($class) {
-            $this->doc = '<table class="'.$class.'">'.DOKU_LF;
+            $this->doc = '<div class="table">'.DOKU_LF.'<table class="'.$class.'">'.DOKU_LF;
         } else {
             // Simplelist is enabled; Skip header and firsthl
             $this->showheader = false;
@@ -279,7 +279,7 @@ class helper_plugin_pagelist extends DokuWiki_Plugin {
     function finishList() {
         if($this->style != 'simplelist') {
             if (!isset($this->page)) $this->doc = '';
-            else $this->doc .= '</table>'.DOKU_LF;
+            else $this->doc .= '</table>'.DOKU_LF.'</div>'.DOKU_LF;
         } else {
             $this->doc .= '</ul>' . DOKU_LF;
         }
