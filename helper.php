@@ -47,9 +47,9 @@ class helper_plugin_pagelist extends DokuWiki_Plugin {
         $this->style       = $this->getConf('style');
         $this->showheader  = $this->getConf('showheader');
         $this->showfirsthl = $this->getConf('showfirsthl');
-		$this->sort        = $this->getConf('sort');
-		$this->rsort       = $this->getConf('rsort');
-		
+        $this->sort        = $this->getConf('sort');
+        $this->rsort       = $this->getConf('rsort');
+
         $this->column = array(
                 'page'     => true,
                 'date'     => $this->getConf('showdate'),
@@ -58,12 +58,14 @@ class helper_plugin_pagelist extends DokuWiki_Plugin {
                 'comments' => $this->getConf('showcomments'),
                 'linkbacks'=> $this->getConf('showlinkbacks'),
                 'tags'     => $this->getConf('showtags'),
+                'image'    => $this->getConf('showimage'),
                 );
 
         $this->plugins = array(
                 'discussion' => 'comments',
                 'linkback'   => 'linkbacks',
                 'tag'        => 'tags',
+                'pageimage'  => 'image',
                 );
     }
 
@@ -113,7 +115,7 @@ class helper_plugin_pagelist extends DokuWiki_Plugin {
     function setFlags($flags) {
         if (!is_array($flags)) return false;
 
-        $columns = array('date', 'user', 'desc', 'comments', 'linkbacks', 'tags');
+        $columns = array('date', 'user', 'desc', 'comments', 'linkbacks', 'tags','image');
         foreach ($flags as $flag) {
             switch ($flag) {
                 case 'default':
@@ -206,6 +208,10 @@ class helper_plugin_pagelist extends DokuWiki_Plugin {
         if ($this->showheader) {
             $this->doc .= DOKU_TAB.'<tr>'.DOKU_LF.DOKU_TAB.DOKU_TAB;
             $columns = array('page', 'date', 'user', 'desc');
+            if ($this->column['image']) {	
+                if (!$this->header['image']) $this->header['image'] = hsc($this->pageimage->th());
+                    $this->doc .= '<th class="images">'.$this->header['image'].'</th>';
+            }
             foreach ($columns as $col) {
                 if ($this->column[$col]) {
                     if (!$this->header[$col]) $this->header[$col] = hsc($this->getLang($col));
@@ -213,7 +219,7 @@ class helper_plugin_pagelist extends DokuWiki_Plugin {
                 }
             }
             foreach ($this->plugins as $plug => $col) {
-                if ($this->column[$col]) {
+                if ($this->column[$col] && $this->column[$col] != 'image') {
                     if (!$this->header[$col]) $this->header[$col] = hsc($this->$plug->th());
                     $this->doc .= '<th class="'.$col.'">'.$this->header[$col].'</th>';
                 }
@@ -245,13 +251,13 @@ class helper_plugin_pagelist extends DokuWiki_Plugin {
             if(!empty($class)) $class = ' class="' . $class . '"';
     
             $this->doc .= DOKU_TAB.'<tr'.$class.'>'.DOKU_LF;
-    
+            if ($this->column['image']) $this->_pluginCell('pageimage','image',$id);
             $this->_pageCell($id);    
             if ($this->column['date']) $this->_dateCell();
             if ($this->column['user']) $this->_userCell();
             if ($this->column['desc']) $this->_descCell();
             foreach ($this->plugins as $plug => $col) {
-                if ($this->column[$col]) $this->_pluginCell($plug, $col, $id);
+                if ($this->column[$col] && $this->column[$col] != 'image') $this->_pluginCell($plug, $col, $id);
             }
             
             $this->doc .= DOKU_TAB.'</tr>'.DOKU_LF;
