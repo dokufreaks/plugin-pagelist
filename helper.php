@@ -219,7 +219,7 @@ class helper_plugin_pagelist extends DokuWiki_Plugin {
                 }
             }
             foreach ($this->plugins as $plug => $col) {
-                if ($this->column[$col] && $this->column[$col] != 'image') {
+                if ($this->column[$col] && $col != 'image') {
                     if (!$this->header[$col]) $this->header[$col] = hsc($this->$plug->th());
                     $this->doc .= '<th class="'.$col.'">'.$this->header[$col].'</th>';
                 }
@@ -257,7 +257,7 @@ class helper_plugin_pagelist extends DokuWiki_Plugin {
             if ($this->column['user']) $this->_userCell();
             if ($this->column['desc']) $this->_descCell();
             foreach ($this->plugins as $plug => $col) {
-                if ($this->column[$col] && $this->column[$col] != 'image') $this->_pluginCell($plug, $col, $id);
+                if ($this->column[$col] && $col != 'image') $this->_pluginCell($plug, $col, $id);
             }
             
             $this->doc .= DOKU_TAB.'</tr>'.DOKU_LF;
