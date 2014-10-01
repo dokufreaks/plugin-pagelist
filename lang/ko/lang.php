@@ -1,10 +1,4 @@
 <?php
-/**
- * Japanese language file
- *
- * @license    GPL 2 (http://www.gnu.org/licenses/gpl.html)
-
- */
 
 // custom language strings for the plugin
 $lang['page'] = '페이지'; 
