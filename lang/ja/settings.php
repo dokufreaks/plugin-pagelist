@@ -4,6 +4,7 @@
  *
  * @license    GPL 2 (http://www.gnu.org/licenses/gpl.html)
  * @author     Ikuo Obataya <cxx05051@nifty.com>
+ *             Hideaki SAWADA <chuno@live.jp>
  */
  
 // for the configuration manager
@@ -28,5 +29,8 @@ $lang['showdesc_o_500']   = '最大500文字';
 $lang['showcomments']     = 'コメントを表示(Discussionプラグインが必要)';
 $lang['showlinkbacks']    = 'リンクベックを表示(Linkbackプラグインが必要)';
 $lang['showtags']         = 'タグを表示(Tagプラグインが必要)';
+$lang['showfirsthl']      = '最初の見出しをページ名とする';
+$lang['sort']             = 'ページ名でソート';
+$lang['rsort']            = 'ページ名で逆ソート';
 
 //Setup VIM: ex: et ts=2 enc=utf-8 :
