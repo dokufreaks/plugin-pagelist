@@ -15,8 +15,7 @@ $lang['showdate']              = '日付を表示する';
 $lang['showdate_o_0']          = '非表示';
 $lang['showdate_o_1']          = '作成日';
 $lang['showdate_o_2']          = '変更日';
-$lang['showuser']              = 'ユーザーを表示する
-';
+$lang['showuser']              = 'ユーザーを表示する';
 $lang['showuser_o_0']          = '非表示';
 $lang['showuser_o_1']          = '作成者';
 $lang['showuser_o_2']          = '編集者';
