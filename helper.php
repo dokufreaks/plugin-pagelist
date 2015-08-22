@@ -25,9 +25,9 @@ class helper_plugin_pagelist extends DokuWiki_Plugin {
     var $showheader = false;   // show a heading line
     var $column     = array(); // which columns to show
     var $header     = array(); // language strings for table headers
-	var $sort       = false;   // alphabetical sort of pages by pagename
-	var $rsort      = false;   // reverse alphabetical sort of pages by pagename
-	
+    var $sort       = false;   // alphabetical sort of pages by pagename
+    var $rsort      = false;   // reverse alphabetical sort of pages by pagename
+
     var $plugins    = array(); // array of plugins to extend the pagelist
     var $discussion = NULL;    // discussion class object
     var $tag        = NULL;    // tag class object
