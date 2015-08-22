@@ -143,14 +143,17 @@ class helper_plugin_pagelist extends DokuWiki_Plugin {
                     $this->showfirsthl = false;
                     break;
                 case 'sort':
-                	$this->sort = true;
-                	break;
+                    $this->sort = true;
+                    $this->rsort = false;
+                    break;
                 case 'rsort':
+                    $this->sort = false;
                     $this->rsort = true;
                     break;
                 case 'nosort':
-                	$this->sort = false;
-                	break;
+                    $this->sort = false;
+                    $this->rsort = false;
+                    break;
             }
 
             if (substr($flag, 0, 2) == 'no') {
