@@ -7,10 +7,11 @@
  */
  
 // for the configuration manager
-$lang['style']            = 'Style of pagelist tables';
+$lang['style']            = 'Style of pagelist';
 $lang['style_o_default']  = 'default';
 $lang['style_o_table']    = 'table';
-$lang['style_o_list']     = 'list';
+$lang['style_o_list']     = 'table/list';
+$lang['style_o_simple']   = 'simple list';
 
 $lang['showheader']       = 'show heading line';
 $lang['showdate']         = 'show date column';
