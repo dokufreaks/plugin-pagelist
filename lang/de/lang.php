@@ -11,5 +11,6 @@ $lang['page'] = 'Seite';
 $lang['date'] = 'Datum';
 $lang['user'] = 'Benutzer';
 $lang['desc'] = 'Beschreibung';
+$lang['diff'] = 'Unterschiede';
 
 //Setup VIM: ex: et ts=2 enc=utf-8 :
