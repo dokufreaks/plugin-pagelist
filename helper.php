@@ -27,6 +27,7 @@ class helper_plugin_pagelist extends DokuWiki_Plugin {
     var $header     = array(); // language strings for table headers
     var $sort       = false;   // alphabetical sort of pages by pagename
     var $rsort      = false;   // reverse alphabetical sort of pages by pagename
+    var $userID     = false;   // show user-ID instead of full name in 'showuser'
 
     var $plugins    = array(); // array of plugins to extend the pagelist
     var $discussion = NULL;    // discussion class object
@@ -153,6 +154,9 @@ class helper_plugin_pagelist extends DokuWiki_Plugin {
                 case 'nosort':
                     $this->sort = false;
                     $this->rsort = false;
+                    break;
+                case 'userID':
+                    $this->userID = true;
                     break;
             }
 
@@ -364,9 +368,17 @@ class helper_plugin_pagelist extends DokuWiki_Plugin {
         if (!array_key_exists('user', $this->page)) {
             if ($this->column['user'] == 2) {
                 $users = $this->_getMeta('contributor');
-                if (is_array($users)) $this->page['user'] = join(', ', $users);
+                if (!$this->userID) {
+                    if (is_array($users)) $this->page['user'] = join(', ', $users);
+                } else {
+                    if (is_array($users)) $this->page['user'] = join(', ', array_keys($users));
+                }
             } else {
-                $this->page['user'] = $this->_getMeta('creator');
+                if (!$this->userID) {
+                    $this->page['user'] = $this->_getMeta('creator');
+                } else {
+                    $this->page['user'] = $this->_getMeta('user');
+                }
             }
         }
         return $this->_printCell('user', hsc($this->page['user']));
