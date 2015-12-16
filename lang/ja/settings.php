@@ -27,5 +27,6 @@ $lang['showcomments']          = 'コメントを表示する(Discussionプラ�
 $lang['showlinkbacks']         = 'リンクベックを表示する(Linkbackプラグインが必要)';
 $lang['showtags']              = 'タグを表示する(Tagプラグインが必要)';
 $lang['showfirsthl']           = '最初の見出しをページ名とする';
+$lang['showdiff']              = '差分ページヘのリンクを表示';
 $lang['sort']                  = 'ページ名でソート';
 $lang['rsort']                 = 'ページ名で逆ソート';
