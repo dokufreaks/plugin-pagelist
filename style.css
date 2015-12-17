@@ -40,12 +40,14 @@ div.dokuwiki th.desc,
 div.dokuwiki th.comments,
 div.dokuwiki th.linkbacks,
 div.dokuwiki th.tags,
+div.dokuwiki th.diff,
 div.dokuwiki td.date,
 div.dokuwiki td.user,
 div.dokuwiki td.desc,
 div.dokuwiki td.comments,
 div.dokuwiki td.linkbacks,
-div.dokuwiki td.tags {
+div.dokuwiki td.tags,
+div.dokuwiki td.diff {
   color: __text_neu__;
   font-size: 80%;
 }

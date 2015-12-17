@@ -16,6 +16,7 @@ $meta['showcomments'] = array('onoff');
 $meta['showlinkbacks']= array('onoff');
 $meta['showtags']     = array('onoff');
 $meta['showfirsthl']  = array('onoff');
+$meta['showdiff']     = array('onoff');
 $meta['sort']         = array('onoff');
 $meta['rsort']        = array('onoff');
 
