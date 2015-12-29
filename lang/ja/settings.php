@@ -6,7 +6,7 @@
  * @author Ikuo Obataya <cxx05051@nifty.com>
  * @author Hideaki SAWADA <chuno@live.jp>
  */
-$lang['style']                 = 'Pagelist の表示形式';
+$lang['style']                 = 'ページ一覧の表示形式';
 $lang['style_o_default']       = '横罫線のみのテーブル（デフォルト）';
 $lang['style_o_table']         = 'テーブル';
 $lang['style_o_list']          = 'リスト';
@@ -24,7 +24,7 @@ $lang['showdesc_o_0']          = '非表示';
 $lang['showdesc_o_160']        = '最大 160 文字';
 $lang['showdesc_o_500']        = '最大 500 文字';
 $lang['showcomments']          = 'コメントを表示する(Discussionプラグインが必要)';
-$lang['showlinkbacks']         = 'リンクベックを表示する(Linkbackプラグインが必要)';
+$lang['showlinkbacks']         = 'リンクバックを表示する(Linkbackプラグインが必要)';
 $lang['showtags']              = 'タグを表示する(Tagプラグインが必要)';
 $lang['showfirsthl']           = '最初の見出しをページ名とする';
 $lang['showdiff']              = '差分ページヘのリンクを表示';
