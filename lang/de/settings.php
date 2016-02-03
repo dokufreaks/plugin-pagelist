@@ -5,9 +5,10 @@
  * 
  * @author Esther Brunner <wikidesign@gmail.com>
  * @author Dominik Eckelmann <deckelmann@gmail.com>
+ * @author e-dschungel <github@e-dschungel.de>
  */
 $lang['style']                 = 'Stil der Seitenlisten';
-$lang['style_o_default']       = 'standard';
+$lang['style_o_default']       = 'Standard';
 $lang['style_o_table']         = 'Tabelle';
 $lang['style_o_list']          = 'Tabelle/Liste';
 $lang['style_o_simple']        = 'Einfache Liste';
