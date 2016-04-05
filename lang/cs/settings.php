@@ -5,6 +5,7 @@
  * 
  * @author Lukas Zapletal <lukas.zapletal at gmail dot com>
  * @author Jaroslav Lichtblau <jlichtblau@seznam.cz>
+ * @author Roman Svoboda <svoboro1@fel.cvut.cz>
  */
 $lang['style']                 = 'Styl seznamu stránek';
 $lang['style_o_default']       = 'implicitní';
@@ -28,5 +29,6 @@ $lang['showcomments']          = 'zobrazovat sloupec s komentáři (vyžadován 
 $lang['showlinkbacks']         = 'zobrazit linkback sloupec (vyžaduje modul Linkback)';
 $lang['showtags']              = 'zobrazovat sloupec s tagy (vyžadován Tag plugin)';
 $lang['showfirsthl']           = 'zobrazit první nadpis místo jména stránky';
+$lang['showdiff']              = 'zobrazit odkaz na stránku diff';
 $lang['sort']                  = 'řadit stránky dle jejich jména';
 $lang['rsort']                 = 'řadit stránky zpětně dle jejich jména';
