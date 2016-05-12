@@ -1,14 +1,13 @@
 <?php
+
 /**
- * Italian language file
- *
- * @author   Willy <willygroup@gmail.com>
+ * @license    GPL 2 (http://www.gnu.org/licenses/gpl.html)
+ * 
+ * @author Willy <willygroup@gmail.com>
+ * @author OlatusRooc <olatusrooc@virgilio.it>
  */
-
-// custom language strings for the plugin
-$lang['page'] = 'Pagina';
-$lang['date'] = 'Data';
-$lang['user'] = 'User';
-$lang['desc'] = 'Descrizione';
-
-//Setup VIM: ex: et ts=2 enc=utf-8 :
+$lang['page']                  = 'Pagina';
+$lang['date']                  = 'Data';
+$lang['user']                  = 'User';
+$lang['desc']                  = 'Descrizione';
+$lang['diff']                  = 'Differenze';
