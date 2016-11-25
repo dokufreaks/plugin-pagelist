@@ -320,8 +320,8 @@ class helper_plugin_pagelist extends DokuWiki_Plugin {
         else $class = 'wikilink2';
 
         // handle image and text titles
-        if ($this->page[titleimage]) {
-            $title = '<img src="'.ml($this->page[titleimage]).'" class="media"';
+        if ($this->page['titleimage']) {
+            $title = '<img src="'.ml($this->page['titleimage']).'" class="media"';
             if ($this->page['title']) $title .= ' title="'.hsc($this->page['title']).'"'.
                 ' alt="'.hsc($this->page['title']).'"';
             $title .= ' />';
