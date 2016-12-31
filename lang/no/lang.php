@@ -10,5 +10,5 @@ $lang['date']                  = 'Dato';
 $lang['user']                  = 'Bruker';
 $lang['desc']                  = 'Beskrivelse';
 $lang['diff']                  = 'Forskjeller';
-$lang['diff_title']            = 'Vis forskjell til nåværende versjon';
-$lang['diff_alt']              = 'Vis forskjeller til nåværende versjon';
+$lang['diff_title']            = 'Vis forskjeller til nåværende versjoner';
+$lang['diff_alt']              = 'Vis forskjeller til nåværende versjoner';
