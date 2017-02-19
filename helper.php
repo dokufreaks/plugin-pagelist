@@ -175,7 +175,7 @@ class helper_plugin_pagelist extends DokuWiki_Plugin {
     /**
      * Sets the list header
      */
-    function startList() {
+    function startList($callerClass=NULL) {
 
         // table style
         switch ($this->style) {
@@ -193,6 +193,9 @@ class helper_plugin_pagelist extends DokuWiki_Plugin {
         }
         
         if($class) {
+            if ($callerClass) {
+                $class .= ' '.$callerClass;
+            }
             $this->doc = '<div class="table">'.DOKU_LF.'<table class="'.$class.'">'.DOKU_LF;
         } else {
             // Simplelist is enabled; Skip header and firsthl
