@@ -43,7 +43,7 @@ class helper_plugin_pagelist extends DokuWiki_Plugin {
      *
      * These can be overriden by plugins using this class
      */
-    function helper_plugin_pagelist() {
+    function __construct() {
         $this->style       = $this->getConf('style');
         $this->showheader  = $this->getConf('showheader');
         $this->showfirsthl = $this->getConf('showfirsthl');
@@ -299,7 +299,7 @@ class helper_plugin_pagelist extends DokuWiki_Plugin {
         }
 
         // reset defaults
-        $this->helper_plugin_pagelist();
+        $this->__construct();
 
         return $this->doc;
     }
