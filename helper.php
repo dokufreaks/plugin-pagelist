@@ -157,6 +157,34 @@ class helper_plugin_pagelist extends DokuWiki_Plugin {
     }
 
     /**
+     * Set the header title for a column.
+     * Can override existing values.
+     */
+    function setHeaderTitle($column, $title, $plugin=NULL) {
+        if ($plugin == NULL
+            || $plugin == 'pagelist'
+            || in_array($plugin, $this->builtinplugins)) {
+            $this->header[$column] = $title;
+        } else {
+            $this->pluginheaders[$plugin][$column] = $title;
+        }
+    }
+
+    /**
+     * Enable or disable a column.
+     * Can override existing values.
+     */
+    function setColumn($column, $value, $plugin=NULL) {
+        if ($plugin == NULL
+            || $plugin == 'pagelist'
+            || in_array($plugin, $this->builtinplugins)) {
+            $this->column[$column] = $value;
+        } else {
+            $this->plugincolumns[$plugin][$column] = $value;
+        }
+    }
+
+    /**
      * Overrides standard values for style, showheader and show(column) settings
      */
     function setFlags($flags) {
