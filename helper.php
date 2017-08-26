@@ -64,6 +64,10 @@ class helper_plugin_pagelist extends DokuWiki_Plugin {
         $this->sort        = $this->getConf('sort');
         $this->rsort       = $this->getConf('rsort');
 
+        $this->header = array();
+        $this->pluginheaders = array();
+        $this->plugincolumns = array();
+
         $this->column = array(
                 'page'     => true,
                 'date'     => $this->getConf('showdate'),
@@ -119,16 +123,6 @@ class helper_plugin_pagelist extends DokuWiki_Plugin {
                 'return' => array('xhtml' => 'string'),
                 );
         return $result;
-    }
-
-    /**
-     * Reset to standard values.
-     */
-    function reset() {
-        $this->header = array();
-        $this->pluginheaders = array();
-        $this->plugincolumns = array();
-        $this->__construct();
     }
 
     /**
