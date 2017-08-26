@@ -1,5 +1,16 @@
 <?php
 /**
+ * Pagelist helper component.
+ * 
+ * There is an array called 'builtinplugins' for listing built-in plugins.
+ * Do not change this.
+ * 
+ * For backwards compatiblity built-in plugins use '$this->header' and '$this->column'
+ * instead of '$this->plugincolumns' and '$this->pluginheaders'.
+ * 
+ * New plugins should use 'addColumn()' to prevent unnecessary changes
+ * to the pagelist helper plugin.
+ * 
  * @license    GPL 2 (http://www.gnu.org/licenses/gpl.html)
  * @author     Esther Brunner <wikidesign@gmail.com>
  * @author     Gina Häußge <osd@foosel.net>
@@ -36,7 +47,10 @@ class helper_plugin_pagelist extends DokuWiki_Plugin {
 
     /* private */
 
-    var $_meta      = NULL;    // metadata array for page
+    var $_meta         = NULL;    // metadata array for page
+    protected $builtinplugins = NULL; // list of builtin-plugins
+    protected $pluginheaders = array(); // language strings for table headers per plugin
+    protected $plugincolumns = array(); // which columns to show per plugin
 
     /**
      * Constructor gets default preferences
@@ -67,6 +81,11 @@ class helper_plugin_pagelist extends DokuWiki_Plugin {
                 'linkback'   => array('linkbacks'),
                 'tag'        => array('tags'),
                 'pageimage'  => array('image'),
+                );
+
+        // Extra array to list built-in plugins. Do not change.
+        $this->builtinplugins = array(
+                'discussion', 'linkback', 'tag', 'pageimage',
                 );
     }
 
@@ -134,7 +153,7 @@ class helper_plugin_pagelist extends DokuWiki_Plugin {
         } else {
             $this->plugins[$plugin] = array($col);
         }
-        $this->column[$col]     = true;
+        $this->plugincolumns[$plugin][$col] = true;
     }
 
     /**
@@ -236,10 +255,19 @@ class helper_plugin_pagelist extends DokuWiki_Plugin {
 
         // check if some plugins are available - if yes, load them!
         foreach ($this->plugins as $plug => $columns) {
+            $builtin = in_array($plug, $this->builtinplugins);
             foreach ($columns as $col) {
-                if (!$this->column[$col]) continue;
+                if ($builtin) {
+                    if (!$this->column[$col]) continue;
+                } else if (!$this->plugincolumns[$plug][$col]) {
+                    continue;
+                }
                 if (plugin_isdisabled($plug) || (!$this->$plug = plugin_load('helper', $plug))) {
-                    $this->column[$col] = false;
+                    if ($builtin) {
+                        $this->column[$col] = false;
+                    } else {
+                        $this->plugincolumns[$plug][$col] = false;
+                    }
                 }
             }
         }
@@ -259,10 +287,18 @@ class helper_plugin_pagelist extends DokuWiki_Plugin {
                 }
             }
             foreach ($this->plugins as $plug => $columns) {
+                $builtin = in_array($plug, $this->builtinplugins);
                 foreach ($columns as $col) {
-                    if ($this->column[$col] && $col != 'image') {
-                        if (!$this->header[$col]) $this->header[$col] = hsc($this->$plug->th($col));
-                        $this->doc .= '<th class="'.$col.'">'.$this->header[$col].'</th>';
+                    if ($builtin) {
+                        if ($this->column[$col] && $col != 'image') {
+                            if (!$this->header[$col]) $this->header[$col] = hsc($this->$plug->th($col));
+                            $this->doc .= '<th class="'.$col.'">'.$this->header[$col].'</th>';
+                        }
+                    } else {
+                        if ($this->plugincolumns[$plug][$col] && $col != 'image') {
+                            if (!$this->pluginheaders[$plug][$col]) $this->pluginheaders[$plug][$col] = hsc($this->$plug->th($col));
+                            $this->doc .= '<th class="'.$col.'">'.$this->pluginheaders[$plug][$col].'</th>';
+                        }
                     }
                 }
             }
@@ -300,8 +336,14 @@ class helper_plugin_pagelist extends DokuWiki_Plugin {
             if ($this->column['desc']) $this->_descCell();
             if ($this->column['diff']) $this->_diffCell($id);
             foreach ($this->plugins as $plug => $columns) {
+                $builtin = in_array($plug, $this->builtinplugins);
                 foreach ($columns as $col) {
-                    if ($this->column[$col] && $col != 'image') $this->_pluginCell($plug, $col, $id);
+                    if ($builtin) {
+                        if ($this->column[$col] && $col != 'image') $this->_pluginCell($plug, $col, $id);
+                    }
+                    else if ($this->plugincolumns[$plug][$col] && $col != 'image') {
+                        $this->_pluginCell($plug, $col, $id);
+                    }
                 }
             }
             
@@ -454,10 +496,12 @@ class helper_plugin_pagelist extends DokuWiki_Plugin {
 
     /**
      * Plugins - respective plugins must be installed!
+     * @see addColumn for more information
      */
     function _pluginCell($plug, $col, $id) {
-        if (!isset($this->page[$col])) $this->page[$col] = $this->$plug->td($id, $col);
-        return $this->_printCell($col, $this->page[$col]);
+        // At this point we do not need to differ between built-in and other plugins
+        if (!isset($this->page['plugins'][$plug][$col])) $this->page['plugins'][$plug][$col] = $this->$plug->td($id, $col);
+        return $this->_printCell($col, $this->page['plugins'][$plug][$col]);
     }
 
     /**
