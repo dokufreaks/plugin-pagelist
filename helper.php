@@ -63,10 +63,10 @@ class helper_plugin_pagelist extends DokuWiki_Plugin {
                 );
 
         $this->plugins = array(
-                'discussion' => 'comments',
-                'linkback'   => 'linkbacks',
-                'tag'        => 'tags',
-                'pageimage'  => 'image',
+                'discussion' => array('comments'),
+                'linkback'   => array('linkbacks'),
+                'tag'        => array('tags'),
+                'pageimage'  => array('image'),
                 );
     }
 
@@ -103,10 +103,37 @@ class helper_plugin_pagelist extends DokuWiki_Plugin {
     }
 
     /**
-     * Adds an extra column for plugins
+     * Adds an extra column named $col for plugin $plugin. This requires that
+     * the plugin $plugin implements a helper plugin with the functions 'th' and 'td'!
+     * 
+     * The function 'th' will be called if "this->startList()" is called.
+     * The call looks like this: $this->$plugin->th($col)
+     * The function 'th' of the helper plugin of $plugin needs to return a column
+     * name for column $col.
+     * 
+     * The function 'td' will be called if "this->addPage()" is called.
+     * The call looks like this: $this->$plug->td($id, $col)
+     * The function 'td' of the  helper plugin of $plugin needs to return a cell
+     * value for page-id $id and column $col.
+     * 
+     * The functions 'th' and 'td' will be called multiple times if $plugin
+     * has called 'addColumn()' with different column names.
+     * 
+     * The parameter $col MUST be optional to prevent crashes if an older version
+     * of the pagelist plugin is installed which will call 'th' and 'td'
+     * without any parameters. So valid function headers look like this:
+     *     function th($column=NULL) { ... }
+     *     function td($id, $column=NULL) { ... }
+     * Or older helper plugins can stay like this:
+     *     function th() { ... }
+     *     function td($id) { ... }
      */
     function addColumn($plugin, $col) {
-        $this->plugins[$plugin] = $col;
+        if (array_key_exists($plugin, $this->plugins)) {
+            $this->plugins[$plugin][] = $col;
+        } else {
+            $this->plugins[$plugin] = array($col);
+        }
         $this->column[$col]     = true;
     }
 
@@ -208,10 +235,13 @@ class helper_plugin_pagelist extends DokuWiki_Plugin {
         $this->page = NULL;
 
         // check if some plugins are available - if yes, load them!
-        foreach ($this->plugins as $plug => $col) {
-            if (!$this->column[$col]) continue;
-            if (plugin_isdisabled($plug) || (!$this->$plug = plugin_load('helper', $plug)))
-                $this->column[$col] = false;
+        foreach ($this->plugins as $plug => $columns) {
+            foreach ($columns as $col) {
+                if (!$this->column[$col]) continue;
+                if (plugin_isdisabled($plug) || (!$this->$plug = plugin_load('helper', $plug))) {
+                    $this->column[$col] = false;
+                }
+            }
         }
 
         // header row
@@ -228,10 +258,12 @@ class helper_plugin_pagelist extends DokuWiki_Plugin {
                     $this->doc .= '<th class="'.$col.'">'.$this->header[$col].'</th>';
                 }
             }
-            foreach ($this->plugins as $plug => $col) {
-                if ($this->column[$col] && $col != 'image') {
-                    if (!$this->header[$col]) $this->header[$col] = hsc($this->$plug->th());
-                    $this->doc .= '<th class="'.$col.'">'.$this->header[$col].'</th>';
+            foreach ($this->plugins as $plug => $columns) {
+                foreach ($columns as $col) {
+                    if ($this->column[$col] && $col != 'image') {
+                        if (!$this->header[$col]) $this->header[$col] = hsc($this->$plug->th($col));
+                        $this->doc .= '<th class="'.$col.'">'.$this->header[$col].'</th>';
+                    }
                 }
             }
             $this->doc .= DOKU_LF.DOKU_TAB.'</tr>'.DOKU_LF;
@@ -267,8 +299,10 @@ class helper_plugin_pagelist extends DokuWiki_Plugin {
             if ($this->column['user']) $this->_userCell();
             if ($this->column['desc']) $this->_descCell();
             if ($this->column['diff']) $this->_diffCell($id);
-            foreach ($this->plugins as $plug => $col) {
-                if ($this->column[$col] && $col != 'image') $this->_pluginCell($plug, $col, $id);
+            foreach ($this->plugins as $plug => $columns) {
+                foreach ($columns as $col) {
+                    if ($this->column[$col] && $col != 'image') $this->_pluginCell($plug, $col, $id);
+                }
             }
             
             $this->doc .= DOKU_TAB.'</tr>'.DOKU_LF;
@@ -422,7 +456,7 @@ class helper_plugin_pagelist extends DokuWiki_Plugin {
      * Plugins - respective plugins must be installed!
      */
     function _pluginCell($plug, $col, $id) {
-        if (!isset($this->page[$col])) $this->page[$col] = $this->$plug->td($id);
+        if (!isset($this->page[$col])) $this->page[$col] = $this->$plug->td($id, $col);
         return $this->_printCell($col, $this->page[$col]);
     }
 
