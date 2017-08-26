@@ -53,7 +53,7 @@ class syntax_plugin_pagelist extends DokuWiki_Syntax_Plugin {
                         'id'          => $id,
                         'section'     => cleanID($section),
                         'title'       => trim($title),
-                        'image'       => trim($image),
+                        'titleimage'  => trim($image),
                         'description' => trim($description), // Holds the added parameter for own descriptions
                         'exists'      => $exists,
                         );
