@@ -81,6 +81,7 @@ class syntax_plugin_pagelist extends DokuWiki_Syntax_Plugin {
         // for XHTML output
         if ($mode == 'xhtml') {
             if (!$my =& plugin_load('helper', 'pagelist')) return false;
+            $my->reset();
             $my->setFlags($flags);
             $my->startList();
             

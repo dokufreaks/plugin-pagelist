@@ -122,6 +122,16 @@ class helper_plugin_pagelist extends DokuWiki_Plugin {
     }
 
     /**
+     * Reset to standard values.
+     */
+    function reset() {
+        $this->header = array();
+        $this->pluginheaders = array();
+        $this->plugincolumns = array();
+        $this->__construct();
+    }
+
+    /**
      * Adds an extra column named $col for plugin $plugin. This requires that
      * the plugin $plugin implements a helper plugin with the functions 'th' and 'td'!
      * 
