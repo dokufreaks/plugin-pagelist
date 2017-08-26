@@ -445,8 +445,6 @@ class helper_plugin_pagelist extends DokuWiki_Plugin {
         } else {
             if($this->showfirsthl) {
                 $this->page['title'] = $this->_getMeta('title');
-            } else {
-                $this->page['title'] = $id;
             }
 
             if (!$this->page['title']) $this->page['title'] = str_replace('_', ' ', noNS($id));
