@@ -324,15 +324,22 @@ class helper_plugin_pagelist extends DokuWiki_Plugin {
             foreach ($this->plugins as $plug => $columns) {
                 $builtin = in_array($plug, $this->builtinplugins);
                 foreach ($columns as $col) {
+                    $class = '';
                     if ($builtin) {
                         if ($this->column[$col] && $col != 'image') {
-                            if (!$this->header[$col]) $this->header[$col] = hsc($this->$plug->th($col));
-                            $this->doc .= '<th class="'.$col.'">'.$this->header[$col].'</th>';
+                            if (!$this->header[$col]) $this->header[$col] = hsc($this->$plug->th($col, $class));
+                            if (empty($class)) {
+                                $class = $col;
+                            }
+                            $this->doc .= '<th class="'.$class.'">'.$this->header[$col].'</th>';
                         }
                     } else {
                         if ($this->plugincolumns[$plug][$col] && $col != 'image') {
-                            if (!$this->pluginheaders[$plug][$col]) $this->pluginheaders[$plug][$col] = hsc($this->$plug->th($col));
-                            $this->doc .= '<th class="'.$col.'">'.$this->pluginheaders[$plug][$col].'</th>';
+                            if (!$this->pluginheaders[$plug][$col]) $this->pluginheaders[$plug][$col] = hsc($this->$plug->th($col, $class));
+                            if (empty($class)) {
+                                $class = $col;
+                            }
+                            $this->doc .= '<th class="'.$class.'">'.$this->pluginheaders[$plug][$col].'</th>';
                         }
                     }
                 }
