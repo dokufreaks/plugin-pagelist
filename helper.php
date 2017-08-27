@@ -135,9 +135,12 @@ class helper_plugin_pagelist extends DokuWiki_Plugin {
      * name for column $col.
      * 
      * The function 'td' will be called if "this->addPage()" is called.
-     * The call looks like this: $this->$plug->td($id, $col)
+     * The call looks like this: $this->$plug->td($id, $col, $class)
      * The function 'td' of the  helper plugin of $plugin needs to return a cell
-     * value for page-id $id and column $col.
+     * value for page-id $id and column $col. In $class the plugin can
+     * optionally return a class name to set for the table cell.
+     * If $class is empty after 'td' has been called, then the column name
+     * will be set as the td's element class.
      * 
      * The functions 'th' and 'td' will be called multiple times if $plugin
      * has called 'addColumn()' with different column names.
@@ -146,7 +149,7 @@ class helper_plugin_pagelist extends DokuWiki_Plugin {
      * of the pagelist plugin is installed which will call 'th' and 'td'
      * without any parameters. So valid function headers look like this:
      *     function th($column=NULL) { ... }
-     *     function td($id, $column=NULL) { ... }
+     *     function td($id, $column=NULL, &$class=NULL) { ... }
      * Or older helper plugins can stay like this:
      *     function th() { ... }
      *     function td($id) { ... }
@@ -530,8 +533,12 @@ class helper_plugin_pagelist extends DokuWiki_Plugin {
      */
     function _pluginCell($plug, $col, $id) {
         // At this point we do not need to differ between built-in and other plugins
-        if (!isset($this->page['plugins'][$plug][$col])) $this->page['plugins'][$plug][$col] = $this->$plug->td($id, $col);
-        return $this->_printCell($col, $this->page['plugins'][$plug][$col]);
+        $class = '';
+        if (!isset($this->page['plugins'][$plug][$col])) $this->page['plugins'][$plug][$col] = $this->$plug->td($id, $col, $class);
+        if (empty($class)) {
+            $class = $col;
+        }
+        return $this->_printCell($class, $this->page['plugins'][$plug][$col], $class);
     }
 
     /**
