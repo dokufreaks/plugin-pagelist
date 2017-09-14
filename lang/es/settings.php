@@ -2,7 +2,7 @@
 
 /**
  * @license    GPL 2 (http://www.gnu.org/licenses/gpl.html)
- * 
+ *
  * @author Herman Fabián Sandoval Manrique <hfsandovalm@emzac.com>
  * @author Domingo Redal <docxml@gmail.com>
  */
@@ -10,6 +10,7 @@ $lang['style']                 = 'estilo de las tablas pagelist';
 $lang['style_o_default']       = 'por defecto';
 $lang['style_o_table']         = 'tabla';
 $lang['style_o_list']          = 'lista';
+$lang['style_o_simple']        = 'lista simple';
 $lang['showheader']            = 'mostrar línea de encabezado';
 $lang['showdate']              = 'mostrar columna de fecha';
 $lang['showdate_o_0']          = 'ocultar';
@@ -27,5 +28,7 @@ $lang['showcomments']          = 'mostrar columna de comentarios (Se requiere el
 $lang['showlinkbacks']         = 'mostrar columna LinkBacks (Se requiere el plugin Linkback)';
 $lang['showtags']              = 'mostrar columna de etiquetas (Se requiere el plugin Tag)';
 $lang['showfirsthl']           = 'mostrar el primer título en lugar del nombre de la página';
+$lang['showimage']             = 'mostrar la columna de la imagen (plugin Pageimage necesario)';
+$lang['showdiff']              = 'muestra el enlace a la página de diferencias';
 $lang['sort']                  = 'ordenar páginas por nombre de la página';
 $lang['rsort']                 = 'orden descendente de páginas por nombre de la página';
