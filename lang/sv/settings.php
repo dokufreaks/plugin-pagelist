@@ -27,6 +27,7 @@ $lang['showcomments']          = 'visa kolumn för kommentarer (kräver Discussi
 $lang['showlinkbacks']         = 'visa kolumn tillbakalänkingar (kräver Linkback-plugin)';
 $lang['showtags']              = 'visa kolumn för taggar (kräver tagg-plugin)';
 $lang['showfirsthl']           = 'visa den första rubriken istället för sidnamn';
+$lang['showimage']             = 'visa bildkolumn (Pageimage-pluginet krävs)';
 $lang['showdiff']              = 'visa länk till sidan som visar skillnader mellan versioner';
 $lang['sort']                  = 'sortera sidor efter sidnamn';
 $lang['rsort']                 = 'sortera i omvänd ordning efter sidnamn';
