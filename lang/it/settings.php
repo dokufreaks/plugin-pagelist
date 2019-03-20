@@ -3,6 +3,7 @@
 /**
  * @license    GPL 2 (http://www.gnu.org/licenses/gpl.html)
  *
+ * @author Roberto Bellingeri <bellingeri@netguru.it>
  * @author Willy <willygroup@gmail.com>
  * @author OlatusRooc <olatusrooc@virgilio.it>
  * @author Marco Fenoglio <marco.fenoglio@gmail.com>
@@ -10,7 +11,7 @@
 $lang['style']                 = 'Stile delle tabelle di pagelist';
 $lang['style_o_default']       = 'default';
 $lang['style_o_table']         = 'tabella';
-$lang['style_o_list']          = 'lista';
+$lang['style_o_list']          = 'tabella/elenco';
 $lang['style_o_simple']        = 'elenco semplice';
 $lang['showheader']            = 'mostra la riga delle intestazioni';
 $lang['showdate']              = 'mostra la colonna della data';
