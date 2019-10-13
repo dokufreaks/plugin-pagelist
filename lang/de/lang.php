@@ -2,12 +2,12 @@
 
 /**
  * @license    GPL 2 (http://www.gnu.org/licenses/gpl.html)
- * 
+ *
+ * @author Nicole Fall <fallnicole83@gmail.com>
  * @author Esther Brunner <wikidesign@gmail.com>
  * @author Dominik Eckelmann <deckelmann@gmail.com>
  * @author e-dschungel <github@e-dschungel.de>
  */
-$lang['page']                  = 'Seite';
 $lang['date']                  = 'Datum';
 $lang['user']                  = 'Benutzer';
 $lang['desc']                  = 'Beschreibung';
