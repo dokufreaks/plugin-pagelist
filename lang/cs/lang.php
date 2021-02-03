@@ -2,7 +2,7 @@
 
 /**
  * @license    GPL 2 (http://www.gnu.org/licenses/gpl.html)
- * 
+ *
  * @author Lukas Zapletal <lukas.zapletal at gmail dot com>
  * @author Roman Svoboda <svoboro1@fel.cvut.cz>
  */
