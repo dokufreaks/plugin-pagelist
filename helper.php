@@ -408,7 +408,7 @@ class helper_plugin_pagelist extends DokuWiki_Plugin {
         $content = '<a href="'.wl($id, $url_params).($this->page['section'] ? '#'.$this->page['section'] : '').'" class="diff_link">
 <img src="/lib/images/diff.png" width="15" height="11" title="'.hsc($this->getLang('diff_title')).'" alt="'.hsc($this->getLang('diff_alt')).'"/>
 </a>';
-        return $this->_printCell('page', $content);
+        return $this->_printCell('diff', $content);
     }
 
     /**
