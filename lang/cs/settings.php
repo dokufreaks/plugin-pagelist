@@ -2,7 +2,8 @@
 
 /**
  * @license    GPL 2 (http://www.gnu.org/licenses/gpl.html)
- * 
+ *
+ * @author Petr Kajzar <petr.kajzar@centrum.cz>
  * @author Lukas Zapletal <lukas.zapletal at gmail dot com>
  * @author Jaroslav Lichtblau <jlichtblau@seznam.cz>
  * @author Roman Svoboda <svoboro1@fel.cvut.cz>
@@ -13,7 +14,7 @@ $lang['style_o_table']         = 'tabulka';
 $lang['style_o_list']          = 'seznam';
 $lang['style_o_simple']        = 'jednoduchý seznam';
 $lang['showheader']            = 'zobrazovat čáru pod nadpisem';
-$lang['showdate']              = 'zobrazovat sloupec s datumem';
+$lang['showdate']              = 'zobrazovat sloupec s datem';
 $lang['showdate_o_0']          = 'nezobrazovat';
 $lang['showdate_o_1']          = 'datum vytvoření';
 $lang['showdate_o_2']          = 'datum poslední změny';
@@ -29,6 +30,7 @@ $lang['showcomments']          = 'zobrazovat sloupec s komentáři (vyžadován 
 $lang['showlinkbacks']         = 'zobrazit linkback sloupec (vyžaduje modul Linkback)';
 $lang['showtags']              = 'zobrazovat sloupec s tagy (vyžadován Tag plugin)';
 $lang['showfirsthl']           = 'zobrazit první nadpis místo jména stránky';
+$lang['showimage']             = 'zobrazovat sloupec s obrázkem (nutný plugin Pageimage)';
 $lang['showdiff']              = 'zobrazit odkaz na stránku diff';
 $lang['sort']                  = 'řadit stránky dle jejich jména';
 $lang['rsort']                 = 'řadit stránky zpětně dle jejich jména';

@@ -16,13 +16,6 @@
  * @author     Gina Häußge <osd@foosel.net>
  */
 
-// must be run within Dokuwiki
-if (!defined('DOKU_INC')) die();
-
-if (!defined('DOKU_LF')) define('DOKU_LF', "\n");
-if (!defined('DOKU_TAB')) define('DOKU_TAB', "\t");
-if (!defined('DOKU_PLUGIN')) define('DOKU_PLUGIN', DOKU_INC.'lib/plugins/');
-
 class helper_plugin_pagelist extends DokuWiki_Plugin {
 
     /* public */
@@ -535,16 +528,53 @@ class helper_plugin_pagelist extends DokuWiki_Plugin {
      */
     function _userCell() {
         if (!array_key_exists('user', $this->page)) {
-            if ($this->column['user'] == 2) {
-                $users = $this->_getMeta('contributor');
-                if (is_array($users)) {
-                    $this->page['user'] = join(', ', $users);
-                }
-            } else {
-                $this->page['user'] = $this->_getMeta('creator');
+            $content = NULL;
+            switch ($this->column['user']) {
+                case 1:
+                    $content = $this->_getMeta('creator');
+                    $content = hsc($content);
+                break;
+                case 2:
+                    $users = $this->_getMeta('contributor');
+                    if (is_array($users)) {
+                        $content = join(', ', $users);
+                        $content = hsc($content);
+                    }
+                break;
+                case 3:
+                    $content = $this->getShowUserAsContent($this->_getMeta('user'));
+                break;
+                case 4:
+                    $users = $this->_getMeta('contributor');
+                    if (is_array($users)) {
+                        $content = '';
+                        $item = 0;
+                        foreach ($users as $userid => $fullname) {
+                            $item++;
+                            $content .= $this->getShowUserAsContent($userid);
+                            if ($item < count($users)) {
+                                $content .= ', ';
+                            }
+                        }
+                    }
+                break;
             }
+            $this->page['user'] = $content;
         }
-        return $this->_printCell('user', hsc($this->page['user']));
+        return $this->_printCell('user', $this->page['user']);
+    }
+
+    /**
+     * Internal function to get user column as set in
+     * 'showuseras' config option.
+     */
+    private function getShowUserAsContent ($login_name) {
+        if (function_exists('userlink')) {
+            $content .= userlink($login_name);
+        } else {
+            $content .= editorinfo($login_name);
+        }
+        return $content;
     }
 
     /**
@@ -586,7 +616,7 @@ class helper_plugin_pagelist extends DokuWiki_Plugin {
         $content = '<a href="'.wl($id, $url_params).($this->page['section'] ? '#'.$this->page['section'] : '').'" class="diff_link">
 <img src="/lib/images/diff.png" width="15" height="11" title="'.hsc($this->getLang('diff_title')).'" alt="'.hsc($this->getLang('diff_alt')).'"/>
 </a>';
-        return $this->_printCell('page', $content);
+        return $this->_printCell('diff', $content);
     }
 
     /**
