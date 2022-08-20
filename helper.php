@@ -7,29 +7,69 @@
 
 class helper_plugin_pagelist extends DokuWiki_Plugin {
 
-    /* public */
+    /** @var string */
+    protected $style = '';      // table style: 'default', 'table', 'list'
+    /** @var bool whether heading line is shown */
+    protected $showheader = false;
+    /** @var bool whether first headline/title is shown in the page column */
+    protected $showfirsthl = false; // show first headline/title
 
-    var $page       = NULL;    // associative array for page to list
-    // must contain a value to key 'id'
-    // can contain: 'title', 'date', 'user', 'desc', 'comments',
-    // 'tags', 'status' and 'priority'
+    /**
+     * @var array with entries: 'columnname' => bool enabled/disable column
+     * @deprecated 2022-08-17 still public, will change to protected
+     */
+    public $column = [];
+    /**
+     * @var array with entries: 'columnname' => language strings for table headers as html for in th
+     * @deprecated 2022-08-17 still public, will change to protected
+     */
+    public $header = [];
 
-    var $style      = '';      // table style: 'default', 'table', 'list'
-    var $showheader = false;   // show a heading line
-    var $column     = array(); // which columns to show
-    var $header     = array(); // language strings for table headers
-    var $sort       = false;   // alphabetical sort of pages by pagename
-    var $rsort      = false;   // reverse alphabetical sort of pages by pagename
+    /**
+     * must contain a value to key 'id', can e.g. contain:
+     * 'title', 'date', 'user', 'desc', 'comments', 'tags', 'status' and 'priority', see addPage() for details
+     *
+     * @var null|array with entries: 'columnname' => value or if plugin html for in td, null is no lines processed
+     * @deprecated 2022-08-17 still public, will change to protected
+     */
+    public $page = null; // associative array for page to list
 
-    var $plugins    = array(); // array of plugins to extend the pagelist
-    var $discussion = NULL;    // discussion class object
-    var $tag        = NULL;    // tag class object
+    /**
+     * setting handled here to combine config with flags, but used outside the helpe
+     * @var bool alphabetical sort of pages by pagename
+     * @deprecated 2022-08-17 still public, will change to protected
+     */
+    public $sort       = false;
+    /**
+     * setting handled here to combine config with flags, but used outside the helper
+     * @var bool reverse alphabetical sort of pages by pagename
+     * @deprecated 2022-08-17 still public, will change to protected
+     */
+    public $rsort      = false;
 
-    var $doc        = '';      // the final output XHTML string
+    /**
+     * 'pluginname' key of array, and is therefore unique, so max one column per plugin?
+     * @var array with entries: 'pluginname' => 'columnname'
+     */
+    protected $plugins    = []; // array of plugins to extend the pagelist
 
-    /* private */
+    /** @var string html output */
+    protected $doc        = '';      // the final output XHTML string
 
-    var $_meta      = NULL;    // metadata array for page
+    /** @var null|mixed data retrieved from metadata array */
+    protected $meta = null;    // metadata array for page
+
+    /** @var array @deprecated 2022-08-17 still used by very old plugins */
+    public $_meta = null;
+
+    /** @var helper_plugin_pageimage */
+    protected $pageimage = null;
+    /** @var helper_plugin_discussion */
+    protected $discussion = null;
+    /** @var helper_plugin_linkback */
+    protected $linkback = null;
+    /** @var helper_plugin_tag */
+    protected $tag = null;
 
     /**
      * Constructor gets default preferences
@@ -240,8 +280,8 @@ class helper_plugin_pagelist extends DokuWiki_Plugin {
         $id = $page['id'];
         if (!$id) return false;
         $this->page = $page;
-        $this->_meta = NULL;
-        
+        $this->meta = null;
+
         if($this->style != 'simplelist') {
             // priority and draft
             if (!isset($this->page['draft'])) {
@@ -478,9 +518,14 @@ class helper_plugin_pagelist extends DokuWiki_Plugin {
      */
     function _getMeta($key) {
         if (!$this->page['exists']) return false;
-        if (!isset($this->_meta)) $this->_meta = p_get_metadata($this->page['id'], '', METADATA_RENDER_USING_CACHE);
-        if (is_array($key)) return $this->_meta[$key[0]][$key[1]];
-        else return $this->_meta[$key];
+        if (!isset($this->meta)) {
+            $this->meta = p_get_metadata($this->page['id'], '', METADATA_RENDER_USING_CACHE);
+        }
+        if (is_array($key)) {
+            return $this->meta[$key[0]][$key[1]];
+        } else {
+            return $this->meta[$key];
+        }
     }
 
 }
