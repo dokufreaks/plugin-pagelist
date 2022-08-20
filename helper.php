@@ -306,12 +306,12 @@ class helper_plugin_pagelist extends DokuWiki_Plugin
      * Sets a list row
      * @param array $page
      *       'id'     => string page id
-     *       'title'  => string First headline, otherwise page id
+     *       'title'  => string First headline, otherwise page id TODO always replaced by id or title from metadata?
      *       'titleimage' => string media id
      *       'date'   => int timestamp of creation date, otherwise modification date (e.g. sometimes needed for msort)
      *       'user'   => string $meta['creator']
      *       'desc'   => string $meta['description']['abstract']
-     *       'description' => ?
+     *       'description' => string description set via pagelist syntax
      *       'exists' => bool page_exists($id)
      *       'perm'   => int auth_quickaclcheck($id)
      *       'draft'  => string $meta['type'] set by blog plugin

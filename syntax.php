@@ -52,9 +52,9 @@ class syntax_plugin_pagelist extends DokuWiki_Syntax_Plugin
         $flags = explode('&', substr($flags, 1));
         $items = explode('*', $match);
 
-        $pages = array();
-        $c = count($items);
-        for ($i = 0; $i < $c; $i++) {
+        $pages = [];
+        $count = count($items);
+        for ($i = 0; $i < $count; $i++) {
             if (!preg_match('/\[\[(.+?)]]/', $items[$i], $match)) continue;
             list($id, $title, $description) = explode('|', $match[1], 3);
             list($id, $section) = explode('#', $id, 2);
@@ -66,25 +66,26 @@ class syntax_plugin_pagelist extends DokuWiki_Syntax_Plugin
                 list($image, $title) = explode('|', $match[1], 2);
                 list(, $mime) = mimetype($image);
                 if (!substr($mime, 0, 5) == 'image') $image = '';
-                $pages[] = array(
+                $pages[] = [
                     'id' => $id,
                     'section' => cleanID($section),
                     'title' => trim($title),
                     'titleimage' => trim($image),
                     'description' => trim($description), // Holds the added parameter for own descriptions
-                );
+                ];
 
-                // text title (if any)
+
             } else {
-                $pages[] = array(
+                // text title (if any)
+                $pages[] = [
                     'id' => $id,
                     'section' => cleanID($section),
                     'title' => trim($title),
                     'description' => trim($description), // Holds the added parameter for own descriptions
-                );
+                ];
             }
         }
-        return array($flags, $pages);
+        return [$flags, $pages];
     }
 
     /**
