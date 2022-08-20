@@ -6,23 +6,45 @@
  * @author     Esther Brunner <wikidesign@gmail.com>
  */
 
-class syntax_plugin_pagelist extends DokuWiki_Syntax_Plugin {
+class syntax_plugin_pagelist extends DokuWiki_Syntax_Plugin
+{
 
-    public function getType() { return 'substition';}
-    public function getPType() { return 'block';}
-    public function getSort() { return 168; }
+    public function getType()
+    {
+        return 'substition';
+    }
+
+    public function getPType()
+    {
+        return 'block';
+    }
+
+    public function getSort()
+    {
+        return 168;
+    }
 
     /**
      * Connect pattern to lexer
+     *
+     * @param string $mode
      */
-    public function connectTo($mode) {
+    public function connectTo($mode)
+    {
         $this->Lexer->addSpecialPattern('<pagelist.+?</pagelist>', $mode, 'plugin_pagelist');
     }
 
     /**
      * Handle the match
+     *
+     * @param string $match The text matched by the patterns
+     * @param int $state The lexer state for the match
+     * @param int $pos The character position of the matched text
+     * @param Doku_Handler $handler The Doku_Handler object
+     * @return  array Return an array with all data you want to use in render
      */
-    public function handle($match, $state, $pos, Doku_Handler $handler) {
+    public function handle($match, $state, $pos, Doku_Handler $handler)
+    {
         global $ID;
 
         $match = substr($match, 9, -11);  // strip markup
@@ -45,23 +67,23 @@ class syntax_plugin_pagelist extends DokuWiki_Syntax_Plugin {
                 list(, $mime) = mimetype($image);
                 if (!substr($mime, 0, 5) == 'image') $image = '';
                 $pages[] = array(
-                        'id'          => $id,
-                        'section'     => cleanID($section),
-                        'title'       => trim($title),
-                        'titleimage'  => trim($image),
-                        'description' => trim($description), // Holds the added parameter for own descriptions
-                        'exists'      => $exists,
-                        );
+                    'id' => $id,
+                    'section' => cleanID($section),
+                    'title' => trim($title),
+                    'titleimage' => trim($image),
+                    'description' => trim($description), // Holds the added parameter for own descriptions
+                    'exists' => $exists,
+                );
 
-            // text title (if any)
+                // text title (if any)
             } else {
                 $pages[] = array(
-                        'id'          => $id,
-                        'section'     => cleanID($section),
-                        'title'       => trim($title),
-                        'description' => trim($description), // Holds the added parameter for own descriptions
-                        'exists'      => $exists,
-                        );
+                    'id' => $id,
+                    'section' => cleanID($section),
+                    'title' => trim($title),
+                    'description' => trim($description), // Holds the added parameter for own descriptions
+                    'exists' => $exists,
+                );
             }
         }
         return array($flags, $pages);
@@ -69,8 +91,14 @@ class syntax_plugin_pagelist extends DokuWiki_Syntax_Plugin {
 
     /**
      * Create output
+     *
+     * @param string $format output format being rendered
+     * @param Doku_Renderer $renderer the current renderer object
+     * @param array $data data created by handler()
+     * @return boolean rendered correctly?
      */
-    public function render($format, Doku_Renderer $renderer, $data) {
+    public function render($format, Doku_Renderer $renderer, $data)
+    {
         list($flags, $pages) = $data;
 
         // for XHTML output
@@ -80,22 +108,22 @@ class syntax_plugin_pagelist extends DokuWiki_Syntax_Plugin {
             $pagelist->setFlags($flags);
             $pagelist->startList();
 
-            if($pagelist->sort || $pagelist->rsort) {		// pages should be sorted by pagename
-                $fnc = function($a, $b){
+            if ($pagelist->sort || $pagelist->rsort) {        // pages should be sorted by pagename
+                $fnc = function ($a, $b) {
                     return strcmp(noNS($a["id"]), noNS($b["id"]));
                 };
-            	usort($pages, $fnc);
-            	// rsort is true - reverse sort the pages
-            	if($pagelist->rsort) krsort($pages);
+                usort($pages, $fnc);
+                // rsort is true - reverse sort the pages
+                if ($pagelist->rsort) krsort($pages);
             }
 
-            foreach($pages as $page) {
+            foreach ($pages as $page) {
                 $pagelist->addPage($page);
             }
             $renderer->doc .= $pagelist->finishList();
             return true;
 
-        // for metadata renderer
+            // for metadata renderer
         } elseif ($format == 'metadata') {
             /** @var Doku_Renderer_metadata $renderer */
             foreach ($pages as $page) {
