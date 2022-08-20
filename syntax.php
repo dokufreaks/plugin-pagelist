@@ -72,7 +72,6 @@ class syntax_plugin_pagelist extends DokuWiki_Syntax_Plugin
                     'title' => trim($title),
                     'titleimage' => trim($image),
                     'description' => trim($description), // Holds the added parameter for own descriptions
-                    'exists' => $exists,
                 );
 
                 // text title (if any)
@@ -82,7 +81,6 @@ class syntax_plugin_pagelist extends DokuWiki_Syntax_Plugin
                     'section' => cleanID($section),
                     'title' => trim($title),
                     'description' => trim($description), // Holds the added parameter for own descriptions
-                    'exists' => $exists,
                 );
             }
         }
@@ -100,6 +98,10 @@ class syntax_plugin_pagelist extends DokuWiki_Syntax_Plugin
     public function render($format, Doku_Renderer $renderer, $data)
     {
         list($flags, $pages) = $data;
+
+        foreach ($pages as $i => $page) {
+            $pages[$i]['exists'] = page_exists($page['id']);
+        }
 
         // for XHTML output
         if ($format == 'xhtml') {
