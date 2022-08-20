@@ -3,26 +3,26 @@
  * Pagelist Plugin: lists pages
  *
  * @license    GPL 2 (http://www.gnu.org/licenses/gpl.html)
- * @author     Esther Brunner <wikidesign@gmail.com>  
+ * @author     Esther Brunner <wikidesign@gmail.com>
  */
- 
+
 class syntax_plugin_pagelist extends DokuWiki_Syntax_Plugin {
-  
-    function getType() { return 'substition';}
-    function getPType() { return 'block';}
-    function getSort() { return 168; }
+
+    public function getType() { return 'substition';}
+    public function getPType() { return 'block';}
+    public function getSort() { return 168; }
 
     /**
      * Connect pattern to lexer
      */
-    function connectTo($mode) {
+    public function connectTo($mode) {
         $this->Lexer->addSpecialPattern('<pagelist.+?</pagelist>', $mode, 'plugin_pagelist');
     }
 
     /**
      * Handle the match
      */
-    function handle($match, $state, $pos, Doku_Handler $handler) {
+    public function handle($match, $state, $pos, Doku_Handler $handler) {
         global $ID;
 
         $match = substr($match, 9, -11);  // strip markup
@@ -33,16 +33,16 @@ class syntax_plugin_pagelist extends DokuWiki_Syntax_Plugin {
         $pages = array();
         $c = count($items);
         for ($i = 0; $i < $c; $i++) {
-            if (!preg_match('/\[\[(.+?)\]\]/', $items[$i], $match)) continue;
+            if (!preg_match('/\[\[(.+?)]]/', $items[$i], $match)) continue;
             list($id, $title, $description) = explode('|', $match[1], 3);
             list($id, $section) = explode('#', $id, 2);
             if (!$id) $id = $ID;
             resolve_pageid(getNS($ID), $id, $exists);
 
             // page has an image title
-            if (($title) && (preg_match('/\{\{(.+?)\}\}/', $title, $match))) {
+            if (($title) && (preg_match('/\{\{(.+?)}}/', $title, $match))) {
                 list($image, $title) = explode('|', $match[1], 2);
-                list($ext, $mime) = mimetype($image);
+                list(, $mime) = mimetype($image);
                 if (!substr($mime, 0, 5) == 'image') $image = '';
                 $pages[] = array(
                         'id'          => $id,
@@ -70,31 +70,34 @@ class syntax_plugin_pagelist extends DokuWiki_Syntax_Plugin {
     /**
      * Create output
      */
-    function render($mode, Doku_Renderer $renderer, $data) {
+    public function render($format, Doku_Renderer $renderer, $data) {
         list($flags, $pages) = $data;
 
         // for XHTML output
-        if ($mode == 'xhtml') {
-            if (!$my =& plugin_load('helper', 'pagelist')) return false;
-            $my->setFlags($flags);
-            $my->startList();
-            
-            if($my->sort || $my->rsort) {		// pages should be sorted by pagename
-            	$keys = array();
-            	$fnc = create_function('$a, $b', 'return strcmp(noNS($a["id"]), noNS($b["id"])); ');
+        if ($format == 'xhtml') {
+            /** @var helper_plugin_pagelist $pagelist */
+            if (!$pagelist = plugin_load('helper', 'pagelist')) return false;
+            $pagelist->setFlags($flags);
+            $pagelist->startList();
+
+            if($pagelist->sort || $pagelist->rsort) {		// pages should be sorted by pagename
+                $fnc = function($a, $b){
+                    return strcmp(noNS($a["id"]), noNS($b["id"]));
+                };
             	usort($pages, $fnc);
-            	// rsort is true - revserse sort the pages
-            	if($my->rsort) krsort($pages);
+            	// rsort is true - reverse sort the pages
+            	if($pagelist->rsort) krsort($pages);
             }
-            
+
             foreach($pages as $page) {
-                $my->addPage($page);
+                $pagelist->addPage($page);
             }
-            $renderer->doc .= $my->finishList();
+            $renderer->doc .= $pagelist->finishList();
             return true;
 
         // for metadata renderer
-        } elseif ($mode == 'metadata') {
+        } elseif ($format == 'metadata') {
+            /** @var Doku_Renderer_metadata $renderer */
             foreach ($pages as $page) {
                 $renderer->meta['relation']['references'][$page['id']] = $page['exists'];
             }
@@ -103,4 +106,3 @@ class syntax_plugin_pagelist extends DokuWiki_Syntax_Plugin {
         return false;
     }
 }
-// vim:ts=4:sw=4:et: 
