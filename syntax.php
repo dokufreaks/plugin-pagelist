@@ -117,7 +117,9 @@ class syntax_plugin_pagelist extends DokuWiki_Syntax_Plugin
                 };
                 usort($pages, $fnc);
                 // rsort is true - reverse sort the pages
-                if ($pagelist->rsort) krsort($pages);
+                if ($pagelist->rsort) {
+                    krsort($pages);
+                }
             }
 
             foreach ($pages as $page) {

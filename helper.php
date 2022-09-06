@@ -303,7 +303,8 @@ class helper_plugin_pagelist extends DokuWiki_Plugin
     }
 
     /**
-     * Sets a list row
+     * Prints html of a list row
+     *
      * @param array $page
      *       'id'     => string page id
      *       'title'  => string First headline, otherwise page id TODO always replaced by id or title from metadata?
@@ -327,6 +328,7 @@ class helper_plugin_pagelist extends DokuWiki_Plugin
 
         $id = $page['id'];
         if (!$id) return false;
+        
         $this->page = $page;
         $this->meta = null;
 
@@ -424,7 +426,7 @@ class helper_plugin_pagelist extends DokuWiki_Plugin
     /**
      * Page title / link to page
      *
-     * @param string $id
+     * @param string $id page id displayed in this table row
      * @return bool whether empty
      */
     protected function pageCell($id)
@@ -539,8 +541,7 @@ class helper_plugin_pagelist extends DokuWiki_Plugin
     }
 
     /**
-     * Internal function to get user column as set in
-     * 'showuseras' config option.
+     * Internal function to get user column as set in 'showuseras' config option.
      *
      * @param string $login_name
      * @return string whether empty
@@ -582,7 +583,7 @@ class helper_plugin_pagelist extends DokuWiki_Plugin
     /**
      * Diff icon / link to diff page
      *
-     * @param string $id
+     * @param string $id page id displayed in this table row
      * @return bool whether empty
      */
     protected function diffCell($id)
@@ -610,8 +611,8 @@ class helper_plugin_pagelist extends DokuWiki_Plugin
      * Plugins - respective plugins must be installed!
      *
      * @param string $plugin pluginname
-     * @param $id
      * @param string $col column name. Before not provided to td of plugin. Since 2022. Allows different columns per plugin.
+     * @param string $id page id displayed in this table row
      * @return bool whether empty
      */
     protected function pluginCell($plugin, $col, $id)
