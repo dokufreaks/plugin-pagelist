@@ -328,7 +328,7 @@ class helper_plugin_pagelist extends DokuWiki_Plugin
 
         $id = $page['id'];
         if (!$id) return false;
-        
+
         $this->page = $page;
         $this->meta = null;
 
@@ -364,7 +364,7 @@ class helper_plugin_pagelist extends DokuWiki_Plugin
                 $this->userCell();
             }
             if (!empty($this->column['desc'])) {
-                $this->descCell();
+                $this->descriptionCell();
             }
             if (!empty($this->column['diff'])) {
                 $this->diffCell($id);
@@ -561,16 +561,22 @@ class helper_plugin_pagelist extends DokuWiki_Plugin
      *
      * @return bool whether empty
      */
-    protected function descCell()
+    protected function descriptionCell()
     {
         if (array_key_exists('desc', $this->page)) {
             $desc = $this->page['desc'];
         } elseif (strlen($this->page['description']) > 0) {
             // This condition will become true, when a page-description is given
-            // inside the syntax-block
+            // inside the pagelist plugin syntax-block
             $desc = $this->page['description'];
         } else {
-            $desc = $this->getMeta('description', 'abstract');
+            //supports meta stored by the Description plugin
+            $desc = $this->getMeta('plugin_description','keywords');
+
+            //use otherwise the default dokuwiki abstract
+            if(!$desc) {
+                $desc = $this->getMeta('description', 'abstract');
+            }
         }
 
         $max = $this->column['desc'];
