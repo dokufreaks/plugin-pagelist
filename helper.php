@@ -610,14 +610,14 @@ class helper_plugin_pagelist extends DokuWiki_Plugin
      * Plugins - respective plugins must be installed!
      *
      * @param string $plugin pluginname
-     * @param $col
      * @param $id
+     * @param string $col column name. Before not provided to td of plugin. Since 2022. Allows different columns per plugin.
      * @return bool whether empty
      */
     protected function pluginCell($plugin, $col, $id)
     {
         if (!isset($this->page[$col])) {
-            $this->page[$col] = $this->$plugin->td($id);
+            $this->page[$col] = $this->$plugin->td($id, $col);
         }
         return $this->printCell($col, $this->page[$col]);
     }
