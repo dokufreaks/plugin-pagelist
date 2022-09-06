@@ -48,7 +48,7 @@ class syntax_plugin_pagelist extends DokuWiki_Syntax_Plugin
         global $ID;
 
         $match = substr($match, 9, -11);  // strip markup
-        list($flags, $match) = explode('>', $match, 2);
+        list($flags, $match) = array_pad(explode('>', $match, 2), 2, null);
         $flags = explode('&', substr($flags, 1));
         $items = explode('*', $match);
 
@@ -56,14 +56,14 @@ class syntax_plugin_pagelist extends DokuWiki_Syntax_Plugin
         $count = count($items);
         for ($i = 0; $i < $count; $i++) {
             if (!preg_match('/\[\[(.+?)]]/', $items[$i], $match)) continue;
-            list($id, $title, $description) = explode('|', $match[1], 3);
-            list($id, $section) = explode('#', $id, 2);
+            list($id, $title, $description) = array_pad(explode('|', $match[1], 3), 3, null);
+            list($id, $section) = array_pad(explode('#', $id, 2), 2, null);
             if (!$id) $id = $ID;
             resolve_pageid(getNS($ID), $id, $exists);
 
             // page has an image title
             if (($title) && (preg_match('/\{\{(.+?)}}/', $title, $match))) {
-                list($image, $title) = explode('|', $match[1], 2);
+                list($image, $title) = array_pad(explode('|', $match[1], 2), 2, null);
                 list(, $mime) = mimetype($image);
                 if (!substr($mime, 0, 5) == 'image') $image = '';
                 $pages[] = [
