@@ -482,9 +482,9 @@ class helper_plugin_pagelist extends DokuWiki_Plugin
         global $conf;
 
         if ($this->column['date'] == 2) {
-            $this->page['date'] = $this->getMeta(array('date', 'modified'));
+            $this->page['date'] = $this->getMeta('date', 'modified');
         } elseif (empty($this->page['date']) && !empty($this->page['exists'])) {
-            $this->page['date'] = $this->getMeta(array('date', 'created'));
+            $this->page['date'] = $this->getMeta('date', 'created');
         }
 
         if ((empty($this->page['date'])) || empty($this->page['exists'])) {
@@ -569,7 +569,7 @@ class helper_plugin_pagelist extends DokuWiki_Plugin
             // inside the syntax-block
             $desc = $this->page['description'];
         } else {
-            $desc = $this->getMeta(['description', 'abstract']);
+            $desc = $this->getMeta('description', 'abstract');
         }
 
         $max = $this->column['desc'];
@@ -645,10 +645,11 @@ class helper_plugin_pagelist extends DokuWiki_Plugin
     /**
      * Get default value for an unset element
      *
-     * @param string|string[] $key one key as string, two keys as array
+     * @param string $key one key of metadata array
+     * @param string $subkey second key as subkey of metadata array
      * @return false|mixed content of the metadata (sub)array
      */
-    protected function getMeta($key)
+    protected function getMeta($key, $subkey=null)
     {
         if (empty($this->page['exists']) || empty($this->page['id'])) {
             return false;
@@ -656,10 +657,11 @@ class helper_plugin_pagelist extends DokuWiki_Plugin
         if (!isset($this->meta)) {
             $this->meta = p_get_metadata($this->page['id'], '', METADATA_RENDER_USING_CACHE);
         }
-        if (is_array($key)) {
-            return $this->meta[$key[0]][$key[1]];
+
+        if($subkey === null) {
+            return $this->meta[$key] ?? null;
         } else {
-            return $this->meta[$key];
+            return $this->meta[$key][$subkey] ?? null;
         }
     }
 
