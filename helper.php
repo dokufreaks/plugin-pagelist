@@ -638,7 +638,7 @@ class helper_plugin_pagelist extends DokuWiki_Plugin
             $empty = false;
         }
         $this->doc .= '<td class="' . $class . '">' . $content . '</td>';
-        return (!$empty);
+        return $empty;
     }
 
 
