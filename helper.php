@@ -1,4 +1,7 @@
 <?php
+
+use dokuwiki\Utf8\PhpString;
+
 /**
  * @license    GPL 2 (http://www.gnu.org/licenses/gpl.html)
  * @author     Esther Brunner <wikidesign@gmail.com>
@@ -79,22 +82,22 @@ class helper_plugin_pagelist extends DokuWiki_Plugin
      */
     public function __construct()
     {
-        $this->style = $this->getConf('style');
-        $this->showheader = $this->getConf('showheader');
-        $this->showfirsthl = $this->getConf('showfirsthl');
-        $this->sort = $this->getConf('sort');
-        $this->rsort = $this->getConf('rsort');
+        $this->style = $this->getConf('style'); //string
+        $this->showheader = $this->getConf('showheader'); //on-off
+        $this->showfirsthl = $this->getConf('showfirsthl'); //on-off
+        $this->sort = $this->getConf('sort'); //on-off
+        $this->rsort = $this->getConf('rsort'); //on-off
 
         $this->column = [
             'page' => true,
-            'date' => $this->getConf('showdate'),
-            'user' => $this->getConf('showuser'),
-            'desc' => $this->getConf('showdesc'),
-            'comments' => $this->getConf('showcomments'),
-            'linkbacks' => $this->getConf('showlinkbacks'),
-            'tags' => $this->getConf('showtags'),
-            'image' => $this->getConf('showimage'),
-            'diff' => $this->getConf('showdiff'),
+            'date' => $this->getConf('showdate'), //0,1,2
+            'user' => $this->getConf('showuser'), //0,1,2,3,4
+            'desc' => $this->getConf('showdesc'), //0,160,500
+            'comments' => $this->getConf('showcomments'), //on-off
+            'linkbacks' => $this->getConf('showlinkbacks'), //on-off
+            'tags' => $this->getConf('showtags'), //on-off
+            'image' => $this->getConf('showimage'), //on-off
+            'diff' => $this->getConf('showdiff'), //on-off
         ];
 
         $this->plugins = [
@@ -590,11 +593,14 @@ class helper_plugin_pagelist extends DokuWiki_Plugin
             if(!$desc) {
                 $desc = $this->getMeta('description', 'abstract');
             }
+            if(blank($desc)) {
+                $desc = '';
+            }
         }
 
         $max = $this->column['desc'];
-        if (($max > 1) && (utf8_strlen($desc) > $max)) {
-            $desc = utf8_substr($desc, 0, $max) . '…';
+        if ($max > 1 && PhpString::strlen($desc) > $max) {
+            $desc = PhpString::substr($desc, 0, $max) . '…';
         }
         return $this->printCell('desc', hsc($desc));
     }
