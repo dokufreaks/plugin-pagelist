@@ -153,7 +153,10 @@ class helper_plugin_pagelist extends DokuWiki_Plugin
      */
     public function addColumn($plugin, $col)
     {
-        $this->plugins[$plugin][] = $col;
+        //prevent duplicates if adding a column of already listed plugins
+        if(!isset($this->plugins[$plugin]) || !in_array($col, $this->plugins[$plugin])) {
+            $this->plugins[$plugin][] = $col;
+        }
         $this->column[$col] = true;
     }
 
