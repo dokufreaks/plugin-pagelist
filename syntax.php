@@ -61,9 +61,8 @@ class syntax_plugin_pagelist extends DokuWiki_Syntax_Plugin
             list($id, $section) = array_pad(explode('#', $id, 2), 2, null);
             if (!$id) $id = $ID;
 
-            // Avoid deprecation notice on Igor and later
-            $version_date = getVersionData()['date'];
-            if ($version_date > '2022-07-31') {
+            // Igor and later
+            if (class_exists('dokuwiki\File\PageResolver')) {
                 $resolver = new dokuwiki\File\PageResolver($ID);
                 $id = $resolver->resolveId($id);
                 $exists = page_exists($id);
