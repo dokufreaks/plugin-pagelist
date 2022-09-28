@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Pagelist Plugin: lists pages
  *
@@ -59,7 +60,16 @@ class syntax_plugin_pagelist extends DokuWiki_Syntax_Plugin
             list($id, $title, $description) = array_pad(explode('|', $match[1], 3), 3, null);
             list($id, $section) = array_pad(explode('#', $id, 2), 2, null);
             if (!$id) $id = $ID;
-            resolve_pageid(getNS($ID), $id, $exists);
+
+            // Igor and later
+            if (class_exists('dokuwiki\File\PageResolver')) {
+                $resolver = new dokuwiki\File\PageResolver($ID);
+                $id = $resolver->resolveId($id);
+                $exists = page_exists($id);
+            } else {
+                // Compatibility with older releases
+                resolve_pageid(getNS($ID), $id, $exists);
+            }
 
             // page has an image title
             if (($title) && (preg_match('/\{\{(.+?)}}/', $title, $match))) {
