@@ -3,10 +3,10 @@
 /**
  * @license    GPL 2 (http://www.gnu.org/licenses/gpl.html)
  *
+ * @author Schplurtz le Déboulonné <schplurtz@laposte.net>
  * @author Olivier Humbert <trebmuh@tuxfamily.org>
  * @author Nicolas Friedli <nicolas@theologique.ch>
  * @author Laynee <seedfloyd@gmail.com>
- * @author Schplurtz le Déboulonné <schplurtz@laposte.net>
  */
 $lang['style']                 = 'Type de présentation';
 $lang['style_o_default']       = 'par défault';
@@ -22,6 +22,8 @@ $lang['showuser']              = 'Afficher la colonne "utilisateur"';
 $lang['showuser_o_0']          = 'ne pas montrer';
 $lang['showuser_o_1']          = 'créateur';
 $lang['showuser_o_2']          = 'contributeurs';
+$lang['showuser_o_3']          = 'Créateur (même format que l\'option «showuseras»)';
+$lang['showuser_o_4']          = 'Contributeur (même format que l\'option «showuseras»)';
 $lang['showdesc']              = 'Afficher la colonne "description"';
 $lang['showdesc_o_0']          = 'ne pas montrer';
 $lang['showdesc_o_160']        = '160 caractères maximum';
