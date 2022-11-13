@@ -19,7 +19,7 @@ class helper_plugin_pagelist extends DokuWiki_Plugin
     protected $showfirsthl = false;
 
     /**
-     * @var array with entries: 'columnname' => bool enabled/disable column
+     * @var array with entries: 'columnname' => bool/int enabled/disable column, something also config setting
      * @deprecated 2022-08-17 still public, will change to protected
      */
     public $column = [];
@@ -30,10 +30,10 @@ class helper_plugin_pagelist extends DokuWiki_Plugin
     public $header = [];
 
     /**
-     * must contain a value to key 'id', can e.g. contain:
+     * must contain a value to key 'id', can further contain as well :
      * 'title', 'date', 'user', 'desc', 'comments', 'tags', 'status' and 'priority', see addPage() for details
      *
-     * @var null|array with entries: 'columnname' => value or if plugin html for in td, null is no lines processed
+     * @var null|array with entries: 'columnname' => value or if plugin html for in cell, null if no lines processed
      * @deprecated 2022-08-17 still public, will change to protected
      */
     public $page = null;
@@ -88,6 +88,13 @@ class helper_plugin_pagelist extends DokuWiki_Plugin
         $this->sort = $this->getConf('sort'); //on-off
         $this->rsort = $this->getConf('rsort'); //on-off
 
+        $this->plugins = [
+            'discussion' => ['comments'],
+            'linkback' => ['linkbacks'],
+            'tag' => ['tags'],
+            'pageimage' => ['image'],
+        ];
+
         $this->column = [
             'page' => true,
             'date' => $this->getConf('showdate'), //0,1,2
@@ -100,12 +107,7 @@ class helper_plugin_pagelist extends DokuWiki_Plugin
             'diff' => $this->getConf('showdiff'), //on-off
         ];
 
-        $this->plugins = [
-            'discussion' => ['comments'],
-            'linkback' => ['linkbacks'],
-            'tag' => ['tags'],
-            'pageimage' => ['image'],
-        ];
+        $this->header = [];
     }
 
     public function getMethods()
@@ -113,37 +115,55 @@ class helper_plugin_pagelist extends DokuWiki_Plugin
         $result = [];
         $result[] = [
             'name' => 'addColumn',
-            'desc' => 'adds an extra column for plugin data',
+            'desc' => '(optional) adds an extra column for plugin data',
             'params' => [
                 'plugin name' => 'string',
-                'column key' => 'string'],
+                'column key' => 'string'
+            ],
         ];
         $result[] = [
+            'name' => 'modifyColumn',
+            'desc' => '(optional) override value of an existing column, value equal to false disables column',
+            'params' => [
+                'column key' => 'string',
+                'value' => 'int|bool'
+            ],
+        ];
+        $result[] = [
+            'name' => 'setHeader',
+            'desc' => '(optional) Provide header data, if not given default values or [plugin]->th() is used',
+            'params' => [
+                'column key' => 'string',
+                'value' => 'int|bool'
+            ],
+        ];        $result[] = [
             'name' => 'setFlags',
-            'desc' => 'overrides standard values for showfooter and firstseconly settings',
+            'desc' => '(optional) overrides default flags, or en/disable existing columns',
             'params' => ['flags' => 'array'],
             'return' => ['success' => 'boolean'],
         ];
         $result[] = [
             'name' => 'startList',
-            'desc' => 'prepares the table header for the page list',
+            'desc' => '(required) prepares the table header for the page list',
         ];
         $result[] = [
             'name' => 'addPage',
-            'desc' => 'adds a page to the list',
+            'desc' => '(required) adds a page to the list',
             'params' => ["page attributes, 'id' required, others optional" => 'array'],
         ];
         $result[] = [
             'name' => 'finishList',
-            'desc' => 'returns the XHTML output',
+            'desc' => '(required) returns the XHTML output',
             'return' => ['xhtml' => 'string'],
         ];
         return $result;
     }
 
     /**
-     * Adds an extra column named $col for plugin $plugin. This requires that
-     * the plugin $plugin implements a helper plugin with the functions:
+     * (optional) Adds an extra column named $col for plugin $plugin.
+     * The data for the extra column is provided via:
+     *    1) extra entry to setHeader([]) or addPage([])
+     *    2) or, alternatively, by the plugin $plugin that implements a helper component with the functions:
      *  - th($col, &$class=null) or th()
      *  - td($id, $col=null, &$class=null) or td($id)
      *
@@ -161,21 +181,47 @@ class helper_plugin_pagelist extends DokuWiki_Plugin
     }
 
     /**
-     * Overrides standard values for style, showheader and show(column) settings
+     * (optional) Allow to override the column values e.g. to disable a column
+     *
+     * @param string $col column name
+     * @param int|bool $value must evaluate to false/true for dis/enabling column. Sometimes value is used for specific setting
+     * @see $column
+     */
+    public function modifyColumn($col, $value)
+    {
+        if(isset($this->column[$col])) {
+            $this->column[$col] = $value;
+        }
+    }
+
+    /**
+     * (optional) Provide header data, if not given for built-in columns localized strings are used, or for plugins the th() function
+     * @see $column the keys of $header should match the keys of $column
+     *
+     * @param array $header entries, if not given default values or plugin->th() is used
+     * @return void
+     */
+    public function setHeader($header) {
+        if(is_array($header)) {
+            $this->header = $header;
+        }
+    }
+
+    /**
+     * (Optional) Overrides standard values for style, showheader and show(column) settings
      *
      * @param string[] $flags
      *  possible flags:
      *     for styling: 'default', 'table', 'list', 'simplelist'
      *     for dis/enabling header: '(no)header', and show titel for page column with '(no)firsthl',
      *     for sorting: 'sort', 'rsort', 'nosort'
-     *     for dis/enabling columns: 'date', 'user', 'desc', 'comments', 'linkbacks', 'tags', 'image', 'diff'
+     *     for dis/enabling columns: accepts keys of $column, e.g. default: 'date', 'user', 'desc', 'comments', 'linkbacks', 'tags', 'image', 'diff'
      * @return bool, false if no array given
      */
     public function setFlags($flags)
     {
         if (!is_array($flags)) return false;
 
-        $columns = ['date', 'user', 'desc', 'comments', 'linkbacks', 'tags', 'image', 'diff'];
         foreach ($flags as $flag) {
             switch ($flag) {
                 case 'default':
@@ -219,6 +265,7 @@ class helper_plugin_pagelist extends DokuWiki_Plugin
                     break;
             }
 
+            /** @see $column array, enable/disable columns */
             if (substr($flag, 0, 2) == 'no') {
                 $value = false;
                 $flag = substr($flag, 2);
@@ -226,7 +273,7 @@ class helper_plugin_pagelist extends DokuWiki_Plugin
                 $value = true;
             }
 
-            if (in_array($flag, $columns)) {
+            if(isset($this->column[$flag]) && $flag !== 'page') {
                 $this->column[$flag] = $value;
             }
         }
@@ -234,7 +281,7 @@ class helper_plugin_pagelist extends DokuWiki_Plugin
     }
 
     /**
-     * Sets the list header
+     * (required) Sets the list header
      *
      * @param null|string $callerClass
      * @return bool
@@ -294,6 +341,7 @@ class helper_plugin_pagelist extends DokuWiki_Plugin
                 }
                 $this->doc .= '<th class="images">' . $this->header['image'] . '</th>';
             }
+            //pagelist columns
             foreach ($columns as $col) {
                 if ($this->column[$col]) {
                     if (empty($this->header[$col])) {
@@ -302,6 +350,7 @@ class helper_plugin_pagelist extends DokuWiki_Plugin
                     $this->doc .= '<th class="' . $col . '">' . $this->header[$col] . '</th>';
                 }
             }
+            //plugin columns
             foreach ($this->plugins as $plugin => $columns) {
                 foreach ($columns as $col) {
                     if ($this->column[$col] && $col != 'image') {
@@ -318,13 +367,13 @@ class helper_plugin_pagelist extends DokuWiki_Plugin
     }
 
     /**
-     * Prints html of a list row
+     * (required) Prints html of a list row, call for every row
      *
      * @param array $page
      *       'id'     => string page id
      *       'title'  => string First headline, otherwise page id TODO always replaced by id or title from metadata?
      *       'titleimage' => string media id
-     *       'date'   => int timestamp of creation date, otherwise modification date (e.g. sometimes needed for msort)
+     *       'date'   => int timestamp of creation date, otherwise modification date (e.g. sometimes needed for plugin)
      *       'user'   => string $meta['creator']
      *       'desc'   => string $meta['description']['abstract']
      *       'description' => string description set via pagelist syntax
@@ -335,7 +384,7 @@ class helper_plugin_pagelist extends DokuWiki_Plugin
      *       'class'  => string class set for each row
      *       'file'   => string wikiFN($id)
      *       'section' => string id of section, added as #ancher to page url
-     *    further key-value pairs for columns set by plugins
+     *    further key-value pairs for columns set by plugins (optional), if not defined th() and td() of plugin are called
      * @return bool, false if no id given
      */
     public function addPage($page)
@@ -418,7 +467,7 @@ class helper_plugin_pagelist extends DokuWiki_Plugin
     }
 
     /**
-     * Sets the list footer, reset helper to defaults
+     * (required) Sets the list footer, reset helper to defaults
      *
      * @return string html
      */
@@ -507,7 +556,7 @@ class helper_plugin_pagelist extends DokuWiki_Plugin
             $this->page['date'] = $this->getMeta('date', 'created');
         }
 
-        if ((empty($this->page['date'])) || empty($this->page['exists'])) {
+        if (empty($this->page['date']) || empty($this->page['exists'])) {
             return $this->printCell('date', '');
         } else {
             return $this->printCell('date', dformat($this->page['date'], $conf['dformat']));
@@ -522,7 +571,7 @@ class helper_plugin_pagelist extends DokuWiki_Plugin
     protected function userCell()
     {
         if (!array_key_exists('user', $this->page)) {
-            $content = NULL;
+            $content = null;
             switch ($this->column['user']) {
                 case 1:
                     $content = $this->getMeta('creator');
