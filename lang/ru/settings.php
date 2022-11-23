@@ -3,6 +3,7 @@
 /**
  * @license    GPL 2 (http://www.gnu.org/licenses/gpl.html)
  *
+ * @author Vyacheslav Strenadko <bryanskmap@yandex.ru>
  * @author Yuriy Skalko <yuriy.skalko@gmail.com>
  * @author Aleksandr Selivanov <alexgearbox@gmail.com>
  * @author RainbowSpike <1@2.ru>
@@ -21,6 +22,8 @@ $lang['showuser']              = 'Столбец имён пользовател
 $lang['showuser_o_0']          = 'скрыть';
 $lang['showuser_o_1']          = 'автор';
 $lang['showuser_o_2']          = 'соавторы';
+$lang['showuser_o_3']          = 'создатель (в формате "showuseras")';
+$lang['showuser_o_4']          = 'участники (в формате "showuseras")';
 $lang['showdesc']              = 'Столбец описания';
 $lang['showdesc_o_0']          = 'скрыть';
 $lang['showdesc_o_160']        = 'Макс. 160 символов';
