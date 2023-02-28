@@ -3,10 +3,10 @@
 /**
  * @license    GPL 2 (http://www.gnu.org/licenses/gpl.html)
  *
+ * @author Gerrit <klapinklapin@gmail.com>
  * @author Esther Brunner <wikidesign@gmail.com>
  * @author Mark C. Prins <mprins@users.sf.net>
  * @author Hugo Smet <hugo.smet@scarlet.be>
- * @author mark prins <mprins@users.sf.net>
  */
 $lang['style']                 = 'Stijl van de pagelist tabellen';
 $lang['style_o_default']       = 'default';
@@ -22,6 +22,8 @@ $lang['showuser']              = 'toon gebruikers kolom';
 $lang['showuser_o_0']          = 'verberg';
 $lang['showuser_o_1']          = 'maker';
 $lang['showuser_o_2']          = 'bijdragers';
+$lang['showuser_o_3']          = 'maker (in "showuseras" formaat)';
+$lang['showuser_o_4']          = 'bijdragers (in "showuseras" formaat)';
 $lang['showdesc']              = 'toon beschrijvingskolom';
 $lang['showdesc_o_0']          = 'verberg';
 $lang['showdesc_o_160']        = 'max. 160 chars.';
@@ -32,5 +34,5 @@ $lang['showtags']              = 'toon tags kolom (Tag Plugin benodigd)';
 $lang['showfirsthl']           = 'toon de eerste kopregel in plaats van de pagina naam';
 $lang['showimage']             = 'toon afbeeldingskolom (Pageimage Plugin nodig)';
 $lang['showdiff']              = 'toon link naar verschil pagina';
-$lang['sort']                  = 'sorteer paginas op pagina naam';
-$lang['rsort']                 = 'sorteer paginas omgekeerd op pagina naam';
+$lang['sort']                  = 'sorteer pagina\'s op paginanaam';
+$lang['rsort']                 = 'sorteer pagina\'s omgekeerd op paginanaam';
