@@ -1,15 +1,17 @@
 <?php
+
 /**
  * Simplified Chinese language file
  *
  * @license    GPL 2 (http://www.gnu.org/licenses/gpl.html)
- * @author     haobug <qingxianhao@gmail.com>
+ *
+ * @author techbox <tech-box@outlook.com>
+ * @author haobug <qingxianhao@gmail.com>
  */
-
-// custom language strings for the plugin
-$lang['page'] = '页面';
-$lang['date'] = '日期';
-$lang['user'] = '用户';
-$lang['desc'] = '描述';
-
-//Setup VIM: ex: et ts=2 enc=utf-8 :
+$lang['page']                  = '页面';
+$lang['date']                  = '日期';
+$lang['user']                  = '用户';
+$lang['desc']                  = '描述';
+$lang['diff']                  = '差异';
+$lang['diff_title']            = '显示与当前修订版的差异';
+$lang['diff_alt']              = '显示与当前修订版的差异';
