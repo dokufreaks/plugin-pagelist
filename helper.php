@@ -521,6 +521,9 @@ class helper_plugin_pagelist extends DokuWiki_Plugin
             }
             $title .= ' />';
         } else {
+            if (!isset($this->page['title'])) {
+                $this->page['title'] = "";
+            }
             //not overwrite titles in earlier provided data
             if (!$this->page['title'] && $this->showfirsthl) {
                 $this->page['title'] = $this->getMeta('title');
