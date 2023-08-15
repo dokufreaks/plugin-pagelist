@@ -75,6 +75,9 @@ class helper_plugin_pagelist extends DokuWiki_Plugin
     /** @var helper_plugin_tag */
     protected $tag = null;
 
+    /** @var inner page list for rendering a sorted list */
+    protected $pages = array();
+
     /**
      * Constructor gets default preferences TODO header array is not reset?
      *
@@ -150,6 +153,18 @@ class helper_plugin_pagelist extends DokuWiki_Plugin
             'name' => 'addPage',
             'desc' => '(required) adds a page to the list',
             'params' => ["page attributes, 'id' required, others optional" => 'array'],
+        ];
+        $result[] = [
+            'name' => 'addPageByKey',
+            'desc' => '(optional) another choice for addPage(). working with renderPages(). adds a page to the inner-list with a key',
+	    'params' => [
+		    "key for sort. 'id' and 'date' valid right now." => 'string',
+		    "page attributes, 'id' required, others optional" => 'array'
+	    ],
+        ];
+        $result[] = [
+            'name' => 'renderPages',
+            'desc' => '(optional) render the sorted inner-pages added by addPageByKey() into output',
         ];
         $result[] = [
             'name' => 'finishList',
@@ -466,6 +481,56 @@ class helper_plugin_pagelist extends DokuWiki_Plugin
         return true;
     }
 
+    /*
+     * For example:
+     * $pages = [
+     *     ['id' => 'wiki:dokuwiki'],
+     *     ['id' => 'wiki:syntax'],
+     * ];
+     * $pagelist = $this->loadHelper('pagelist');
+     * if (!$pagelist) return false; // failed to load plugin
+     * $pagelist->startList();
+     * foreach ($pages as $page){
+     *     $pagelist->addPageByKey('date', $page);
+     * }
+     * $pagelist->renderPages();
+     * $renderer->doc .= $pagelist->finishList();
+     */
+    public function addPageByKey($key, $value)
+    {
+          $page = urldecode($value);
+          $meta = p_get_metadata($page);
+          if($key == "id") {
+              $sortKey = $page['id'] ;
+          }
+          if($key == "date") {
+              if($this->getConf('showdate') == 1) {
+                  $sortKey = $meta['date']['created'] ;
+	      }
+	      else {
+                  $sortKey = $meta['date']['modified'] ;
+              }
+          }
+          $sortKey = $this->uniqueKey($sortKey, $this->pages);
+          if(page_exists($page)) {
+              $this->pages[$sortKey] = array('id' => $page);
+          }
+    }
+
+    public function renderPages()
+    {
+        if($this->sort) {
+            ksort($this->pages);
+        }
+        if($this->rsort) {
+            krsort($this->pages);
+        }
+        foreach($this->pages as $page) {
+            $this->addPage($page);
+        }
+        $this->pages = array();
+    }
+
     /**
      * (required) Sets the list footer, reset helper to defaults
      *
@@ -745,4 +810,34 @@ class helper_plugin_pagelist extends DokuWiki_Plugin
         }
     }
 
+    /**
+     * Non-recursive function to check whether an array key is unique
+     *
+     * @param int|string $key
+     * @param array $result
+     * @return float|int|string
+     *
+     * @author    Ilya S. Lebedev <ilya@lebedev.net>
+     * @author    Esther Brunner <wikidesign@gmail.com>
+     */
+    protected function uniqueKey($key, $result) {
+
+        // increase numeric keys by one
+        if (is_numeric($key)) {
+            while (array_key_exists($key, $result)) {
+                $key++;
+            }
+            return $key;
+
+            // append a number to literal keys
+        } else {
+            $num     = 0;
+            $testkey = $key;
+            while (array_key_exists($testkey, $result)) {
+                $testkey = $key.$num;
+                $num++;
+            }
+            return $testkey;
+        }
+    }
 }
