@@ -1,17 +1,17 @@
 <?php
 
 use dokuwiki\Utf8\PhpString;
+use dokuwiki\Utf8\Sort;
 
 /**
  * @license    GPL 2 (http://www.gnu.org/licenses/gpl.html)
  * @author     Esther Brunner <wikidesign@gmail.com>
  * @author     Gina Häußge <osd@foosel.net>
  */
-
 class helper_plugin_pagelist extends DokuWiki_Plugin
 {
 
-    /** @var string table style: 'default', 'table', 'list'*/
+    /** @var string table style: 'default', 'table', 'list' */
     protected $style = '';
     /** @var bool whether heading line is shown */
     protected $showheader = false;
@@ -20,47 +20,57 @@ class helper_plugin_pagelist extends DokuWiki_Plugin
 
     /**
      * @var array with entries: 'columnname' => bool/int enabled/disable column, something also config setting
-     * @deprecated 2022-08-17 still public, will change to protected
+     * @deprecated 2022-08-17 still public, will change to protected. Use addColumn() and modifyColumn() instead.
      */
     public $column = [];
     /**
      * @var array with entries: 'columnname' => language strings for table headers as html for in th
-     * @deprecated 2022-08-17 still public, will change to protected
+     * @deprecated 2022-08-17 still public, will change to protected, use setHeader() instead.
      */
     public $header = [];
 
     /**
-     * must contain a value to key 'id', can further contain as well :
-     * 'title', 'date', 'user', 'desc', 'comments', 'tags', 'status' and 'priority', see addPage() for details
+     * Associated array, where the keys are the sortkey.
+     * For each row an array is added which must contain at least the key 'id', can further contain as well :
+     *  'title', 'date', 'user', 'desc', 'comments', 'tags', 'status' and 'priority', see addPage() for details
+     * @var array[] array of arrays with the entries: 'columnname' => value, or if plugin the html for in cell
+     */
+    protected $pages = [];
+
+    /**
+     * data of the current processed page row
+     * see addPage() for details
      *
      * @var null|array with entries: 'columnname' => value or if plugin html for in cell, null if no lines processed
-     * @deprecated 2022-08-17 still public, will change to protected
+     * @deprecated 2022-08-17 still public, will change to protected, use addPage() instead
      */
     public $page = null;
 
     /**
-     * setting handled here to combine config with flags, but used outside the helpe
-     * @var bool alphabetical sort of pages by pagename
-     * @deprecated 2022-08-17 still public, will change to protected
+     * @var bool enables sorting. If no sortkey was given, 'id' is used.
+     * @deprecated 2022-08-17 still public, will change to protected, use setFlags() instead
      */
     public $sort = false;
     /**
-     * setting handled here to combine config with flags, but used outside the helper
-     * @var bool reverse alphabetical sort of pages by pagename
-     * @deprecated 2022-08-17 still public, will change to protected
+     * @var bool Reverses the sort
+     * @deprecated 2022-08-17 still public, will change to protected, use setFlags()instead
      */
     public $rsort = false;
 
     /**
-     * 'pluginname' key of array, and is therefore unique, so max one column per plugin?
-     * @var array with entries: 'pluginname' => ['columnname', 'columnname2']
+     * @var string the data entry to use as key for sorting
      */
-    protected $plugins = []; // array of plugins to extend the pagelist
+    private $sortKey;
+
+    /**
+     * @var array with entries: 'pluginname' => ['columnname1', 'columnname2'], registers the available columns per plugin
+     */
+    protected $plugins = [];
 
     /** @var string final html output */
     protected $doc = '';
 
-    /** @var null|mixed data retrieved from metadata array */
+    /** @var null|mixed data retrieved from metadata array for the current processed page */
     protected $meta = null;
 
     /** @var array @deprecated 2022-08-17 still used by very old plugins */
@@ -76,7 +86,7 @@ class helper_plugin_pagelist extends DokuWiki_Plugin
     protected $tag = null;
 
     /**
-     * Constructor gets default preferences TODO header array is not reset?
+     * Constructor gets default preferences
      *
      * These can be overriden by plugins using this class
      */
@@ -108,6 +118,7 @@ class helper_plugin_pagelist extends DokuWiki_Plugin
         ];
 
         $this->header = [];
+        $this->sortKey = '';
     }
 
     public function getMethods()
@@ -136,7 +147,8 @@ class helper_plugin_pagelist extends DokuWiki_Plugin
                 'column key' => 'string',
                 'value' => 'int|bool'
             ],
-        ];        $result[] = [
+        ];
+        $result[] = [
             'name' => 'setFlags',
             'desc' => '(optional) overrides default flags, or en/disable existing columns',
             'params' => ['flags' => 'array'],
@@ -174,7 +186,7 @@ class helper_plugin_pagelist extends DokuWiki_Plugin
     public function addColumn($plugin, $col)
     {
         //prevent duplicates if adding a column of already listed plugins
-        if(!isset($this->plugins[$plugin]) || !in_array($col, $this->plugins[$plugin])) {
+        if (!isset($this->plugins[$plugin]) || !in_array($col, $this->plugins[$plugin])) {
             $this->plugins[$plugin][] = $col;
         }
         $this->column[$col] = true;
@@ -189,20 +201,21 @@ class helper_plugin_pagelist extends DokuWiki_Plugin
      */
     public function modifyColumn($col, $value)
     {
-        if(isset($this->column[$col])) {
+        if (isset($this->column[$col])) {
             $this->column[$col] = $value;
         }
     }
 
     /**
      * (optional) Provide header data, if not given for built-in columns localized strings are used, or for plugins the th() function
-     * @see $column the keys of $header should match the keys of $column
-     *
      * @param array $header entries, if not given default values or plugin->th() is used
      * @return void
+     * @see $column the keys of $header should match the keys of $column
+     *
      */
-    public function setHeader($header) {
-        if(is_array($header)) {
+    public function setHeader($header)
+    {
+        if (is_array($header)) {
             $this->header = $header;
         }
     }
@@ -214,8 +227,8 @@ class helper_plugin_pagelist extends DokuWiki_Plugin
      *  possible flags:
      *     for styling: 'default', 'table', 'list', 'simplelist'
      *     for dis/enabling header: '(no)header', and show titel for page column with '(no)firsthl',
-     *     for sorting: 'sort', 'rsort', 'nosort'
-     *     for dis/enabling columns: accepts keys of $column, e.g. default: 'date', 'user', 'desc', 'comments', 'linkbacks', 'tags', 'image', 'diff'
+     *     for sorting: 'sort', 'rsort', 'nosort', 'sortby=<columnname>'
+     *     for dis/enabling columns: accepts keys of $column, e.g. default: '(no)date', 'user', 'desc', 'comments', 'linkbacks', 'tags', 'image', 'diff'
      * @return bool, false if no array given
      */
     public function setFlags($flags)
@@ -249,11 +262,11 @@ class helper_plugin_pagelist extends DokuWiki_Plugin
                     $this->showfirsthl = false;
                     break;
                 case 'sort':
-                    $this->sort = true;
+                    $this->sort = true; //sort by pageid
                     $this->rsort = false;
                     break;
                 case 'rsort':
-                    $this->sort = false;
+                    $this->sort = true; //reverse sort on key, not sure if that is by pageid
                     $this->rsort = true;
                     break;
                 case 'nosort':
@@ -265,6 +278,13 @@ class helper_plugin_pagelist extends DokuWiki_Plugin
                     break;
             }
 
+            // it is not required to set the sort flag, rsort flag will reverse.
+            // $flag should be an existing column, not checked here as addColumn() is maybe called later then setFlags()?
+            if (substr($flag, 0, 7) == 'sortby=') {
+                $this->sortKey = substr($flag, 7);
+                $this->sort = true;
+            }
+
             /** @see $column array, enable/disable columns */
             if (substr($flag, 0, 2) == 'no') {
                 $value = false;
@@ -273,9 +293,12 @@ class helper_plugin_pagelist extends DokuWiki_Plugin
                 $value = true;
             }
 
-            if(isset($this->column[$flag]) && $flag !== 'page') {
+            if (isset($this->column[$flag]) && $flag !== 'page') {
                 $this->column[$flag] = $value;
             }
+        }
+        if ($this->sortKey === '' && $this->sort) {
+            $this->sortKey = 'id';
         }
         return true;
     }
@@ -313,15 +336,16 @@ class helper_plugin_pagelist extends DokuWiki_Plugin
             // Simplelist is enabled; Skip header and firsthl
             $this->showheader = false;
             $this->showfirsthl = false;
-            //$this->doc .= DOKU_LF.DOKU_TAB.'</tr>'.DOKU_LF;
+
             $this->doc = '<ul>';
         }
 
         $this->page = null;
+        $this->pages = [];
 
         // check if some plugins are available - if yes, load them!
         foreach ($this->plugins as $plugin => $columns) {
-            foreach($columns as $col) {
+            foreach ($columns as $col) {
                 if (!$this->column[$col]) continue;
 
                 if (!$this->$plugin = $this->loadHelper($plugin)) {
@@ -367,10 +391,10 @@ class helper_plugin_pagelist extends DokuWiki_Plugin
     }
 
     /**
-     * (required) Prints html of a list row, call for every row
+     * (required) Add page row to the list, call for every row
      *
      * @param array $page
-     *       'id'     => string page id
+     *       'id'     => (required) string page id
      *       'title'  => string First headline, otherwise page id TODO always replaced by id or title from metadata?
      *       'titleimage' => string media id
      *       'date'   => int timestamp of creation date, otherwise modification date (e.g. sometimes needed for plugin)
@@ -389,18 +413,113 @@ class helper_plugin_pagelist extends DokuWiki_Plugin
      */
     public function addPage($page)
     {
-
         $id = $page['id'];
         if (!$id) return false;
-
         $this->page = $page;
-        $this->meta = null;
+        $this->meta = null; // do all metadata calls in addPage()
 
         if ($this->style != 'simplelist') {
-            // priority and draft
             if (!isset($this->page['draft'])) {
-                $this->page['draft'] = ($this->getMeta('type') == 'draft');
+                $this->page['draft'] = $this->getMeta('type') == 'draft';
             }
+            $this->getPageData($id);
+
+            if (!empty($this->column['date'])) {
+                $this->getDate();
+            }
+            if (!empty($this->column['user'])) {
+                $this->getUser();
+            }
+            if (!empty($this->column['desc'])) {
+                $this->getDescription();
+            }
+        }
+
+        $sortKey = '';
+        if ($this->sortKey !== '') {
+            $sortKey = $this->page[$this->sortKey] ?? false;
+            if ($sortKey === false) {
+                if ($this->sortKey == "draft") {
+                    $this->page['draft'] = $this->getMeta('type') == 'draft';
+                }
+                $this->getPageData($id);
+                if ($this->sortKey == "date") {
+                    $this->getDate();
+                }
+                if ($this->sortKey == "desc") {
+                    $this->getDescription();
+                }
+                if ($this->sortKey == "user") {
+                    $this->getUser();
+                }
+                foreach ($this->plugins as $plugin => $columns) {
+                    foreach ($columns as $col) {
+                        if ($this->sortKey == $col) {
+                            if (!isset($this->page[$col])) {
+                                $this->page[$col] = $this->$plugin->td($id, $col);
+                            }
+                        }
+                    }
+                }
+                $sortKey = $this->page[$this->sortKey] ?? 9999999999999999; //TODO mostly used for non-existing pages. 999 works only for dates?
+            }
+        }
+
+        if (!blank($sortKey)) {
+            //unique key needed, otherwise entries are overwritten
+            $sortKey = $this->uniqueKey($sortKey, $this->pages);
+            $this->pages[$sortKey] = $this->page;
+        } else {
+            $this->pages[] = $this->page;
+        }
+        return true;
+    }
+
+    /**
+     * Non-recursive function to check whether an array key is unique
+     *
+     * @param int|string $key
+     * @param array $result
+     * @return float|int|string
+     *
+     * @author    Ilya S. Lebedev <ilya@lebedev.net>
+     * @author    Esther Brunner <wikidesign@gmail.com>
+     */
+    protected function uniqueKey($key, $result)
+    {
+        // increase numeric keys by one
+        if (is_numeric($key)) {
+            while (array_key_exists($key, $result)) {
+                $key++;
+            }
+            return $key;
+
+            // append a number to literal keys
+        } else {
+            $num = 0;
+            $testkey = $key;
+            while (array_key_exists($testkey, $result)) {
+                $testkey = $key . $num;
+                $num++;
+            }
+            return $testkey;
+        }
+    }
+
+    /**
+     * Prints html of a list row, call for every row
+     *
+     * @param array $page see for details @see addPage()
+     * @return void
+     */
+    protected function renderPageRow($page)
+    {
+        $this->page = $page;
+        $this->meta = null; // should not be used here
+
+        $id = $this->page['id'];
+        if ($this->style != 'simplelist') {
+            // priority and draft
             $class = '';
             if (isset($this->page['priority'])) {
                 $class .= 'priority' . $this->page['priority'] . ' ';
@@ -419,26 +538,26 @@ class helper_plugin_pagelist extends DokuWiki_Plugin
             $this->doc .= '<tr' . $class . '>';
             //image column first
             if (!empty($this->column['image'])) {
-                $this->pluginCell('pageimage', 'image', $id);
+                $this->printPluginCell('pageimage', 'image', $id);
             }
-            $this->pageCell($id);
+            $this->printPageCell($id);
 
             if (!empty($this->column['date'])) {
-                $this->dateCell();
+                $this->printDateCell();
             }
             if (!empty($this->column['user'])) {
-                $this->userCell();
+                $this->printUserCell();
             }
             if (!empty($this->column['desc'])) {
-                $this->descriptionCell();
+                $this->printDescriptionCell();
             }
             if (!empty($this->column['diff'])) {
-                $this->diffCell($id);
+                $this->printDiffCell($id);
             }
             foreach ($this->plugins as $plugin => $columns) {
                 foreach ($columns as $col) {
                     if (!empty($this->column[$col]) && $col != 'image') {
-                        $this->pluginCell($plugin, $col, $id);
+                        $this->printPluginCell($plugin, $col, $id);
                     }
                 }
             }
@@ -462,17 +581,27 @@ class helper_plugin_pagelist extends DokuWiki_Plugin
             $this->doc .= $content;
             $this->doc .= '</li>';
         }
-
-        return true;
     }
 
     /**
-     * (required) Sets the list footer, reset helper to defaults
+     * (required) Sort pages and render these.
+     * Sets the list footer, reset helper to defaults
      *
      * @return string html
      */
     public function finishList()
     {
+        if ($this->sort) {
+            Sort::ksort($this->pages);
+            if ($this->rsort) {
+                arsort($this->pages);
+            }
+        }
+
+        foreach ($this->pages as $page) {
+            $this->renderPageRow($page);
+        }
+
         if ($this->style != 'simplelist') {
             if (!isset($this->page)) {
                 $this->doc = '';
@@ -497,16 +626,8 @@ class helper_plugin_pagelist extends DokuWiki_Plugin
      * @param string $id page id displayed in this table row
      * @return bool whether empty
      */
-    protected function pageCell($id)
+    protected function printPageCell($id)
     {
-
-        // check for page existence
-        if (!isset($this->page['exists'])) {
-            if (!isset($this->page['file'])) {
-                $this->page['file'] = wikiFN($id);
-            }
-            $this->page['exists'] = @file_exists($this->page['file']);
-        }
         if ($this->page['exists']) {
             $class = 'wikilink1';
         } else {
@@ -521,23 +642,12 @@ class helper_plugin_pagelist extends DokuWiki_Plugin
             }
             $title .= ' />';
         } else {
-            if (!isset($this->page['title'])) {
-                $this->page['title'] = "";
-            }
-            //not overwrite titles in earlier provided data
-            if (!$this->page['title'] && $this->showfirsthl) {
-                $this->page['title'] = $this->getMeta('title');
-            }
-
-            if (!$this->page['title']) {
-                $this->page['title'] = str_replace('_', ' ', noNSorNS($id));
-            }
             $title = hsc($this->page['title']);
         }
 
         // produce output
-        $content = '<a href="' . wl($id) . (!empty($this->page['section']) ? '#' . $this->page['section'] : '') .
-            '" class="' . $class . '" title="' . $id . '">' . $title . '</a>';
+        $section = !empty($this->page['section']) ? '#' . $this->page['section'] : '';
+        $content = '<a href="' . wl($id) . $section . '" class="' . $class . '" title="' . $id . '">' . $title . '</a>';
         if ($this->style == 'list') {
             $content = '<ul><li>' . $content . '</li></ul>';
         }
@@ -549,15 +659,9 @@ class helper_plugin_pagelist extends DokuWiki_Plugin
      *
      * @return bool whether empty
      */
-    protected function dateCell()
+    protected function printDateCell()
     {
         global $conf;
-
-        if ($this->column['date'] == 2) {
-            $this->page['date'] = $this->getMeta('date', 'modified');
-        } elseif (empty($this->page['date']) && !empty($this->page['exists'])) {
-            $this->page['date'] = $this->getMeta('date', 'created');
-        }
 
         if (empty($this->page['date']) || empty($this->page['exists'])) {
             return $this->printCell('date', '');
@@ -571,42 +675,8 @@ class helper_plugin_pagelist extends DokuWiki_Plugin
      *
      * @return bool whether empty
      */
-    protected function userCell()
+    protected function printUserCell()
     {
-        if (!array_key_exists('user', $this->page)) {
-            $content = null;
-            switch ($this->column['user']) {
-                case 1:
-                    $content = $this->getMeta('creator');
-                    $content = hsc($content);
-                    break;
-                case 2:
-                    $users = $this->getMeta('contributor');
-                    if (is_array($users)) {
-                        $content = join(', ', $users);
-                        $content = hsc($content);
-                    }
-                    break;
-                case 3:
-                    $content = $this->getShowUserAsContent($this->getMeta('user'));
-                    break;
-                case 4:
-                    $users = $this->getMeta('contributor');
-                    if (is_array($users)) {
-                        $content = '';
-                        $item = 0;
-                        foreach ($users as $userid => $fullname) {
-                            $item++;
-                            $content .= $this->getShowUserAsContent($userid);
-                            if ($item < count($users)) {
-                                $content .= ', ';
-                            }
-                        }
-                    }
-                    break;
-            }
-            $this->page['user'] = $content;
-        }
         return $this->printCell('user', $this->page['user']);
     }
 
@@ -631,26 +701,9 @@ class helper_plugin_pagelist extends DokuWiki_Plugin
      *
      * @return bool whether empty
      */
-    protected function descriptionCell()
+    protected function printDescriptionCell()
     {
-        if (array_key_exists('desc', $this->page)) {
-            $desc = $this->page['desc'];
-        } elseif (strlen($this->page['description']) > 0) {
-            // This condition will become true, when a page-description is given
-            // inside the pagelist plugin syntax-block
-            $desc = $this->page['description'];
-        } else {
-            //supports meta stored by the Description plugin
-            $desc = $this->getMeta('plugin_description','keywords');
-
-            //use otherwise the default dokuwiki abstract
-            if(!$desc) {
-                $desc = $this->getMeta('description', 'abstract');
-            }
-            if(blank($desc)) {
-                $desc = '';
-            }
-        }
+        $desc = $this->page['desc'];
 
         $max = $this->column['desc'];
         if ($max > 1 && PhpString::strlen($desc) > $max) {
@@ -665,7 +718,7 @@ class helper_plugin_pagelist extends DokuWiki_Plugin
      * @param string $id page id displayed in this table row
      * @return bool whether empty
      */
-    protected function diffCell($id)
+    protected function printDiffCell($id)
     {
         // check for page existence
         if (!isset($this->page['exists'])) {
@@ -694,7 +747,7 @@ class helper_plugin_pagelist extends DokuWiki_Plugin
      * @param string $id page id displayed in this table row
      * @return bool whether empty
      */
-    protected function pluginCell($plugin, $col, $id)
+    protected function printPluginCell($plugin, $col, $id)
     {
         if (!isset($this->page[$col])) {
             $this->page[$col] = $this->$plugin->td($id, $col);
@@ -729,7 +782,7 @@ class helper_plugin_pagelist extends DokuWiki_Plugin
      * @param string $subkey second key as subkey of metadata array
      * @return false|mixed content of the metadata (sub)array
      */
-    protected function getMeta($key, $subkey=null)
+    protected function getMeta($key, $subkey = null)
     {
         if (empty($this->page['exists']) || empty($this->page['id'])) {
             return false;
@@ -738,10 +791,118 @@ class helper_plugin_pagelist extends DokuWiki_Plugin
             $this->meta = p_get_metadata($this->page['id'], '', METADATA_RENDER_USING_CACHE);
         }
 
-        if($subkey === null) {
+        if ($subkey === null) {
             return $this->meta[$key] ?? null;
         } else {
             return $this->meta[$key][$subkey] ?? null;
+        }
+    }
+
+    /**
+     * Retrieve page related data
+     *
+     * @param string $id page id
+     */
+    private function getPageData($id)
+    {
+        // check for page existence
+        if (!isset($this->page['exists'])) {
+            if (!isset($this->page['file'])) {
+                $this->page['file'] = wikiFN($id);
+            }
+            $this->page['exists'] = @file_exists($this->page['file']);
+        }
+        //retrieve title, but not if titleimage which can have eventually its own
+        if (empty($this->page['titleimage'])) {
+            //not overwrite titles in earlier provided data
+            if (blank($this->page['title']) && $this->showfirsthl) {
+                $this->page['title'] = $this->getMeta('title');
+            }
+
+            if (blank($this->page['title'])) {
+                $this->page['title'] = str_replace('_', ' ', noNSorNS($id));
+            }
+        }
+    }
+
+    /**
+     * Retrieve description
+     */
+    private function getDescription()
+    {
+        if (array_key_exists('desc', $this->page)) return;
+
+        if (strlen($this->page['description']) > 0) {
+            // This condition will become true, when a page-description is given
+            // inside the pagelist plugin syntax-block
+            $desc = $this->page['description'];
+        } else {
+            //supports meta stored by the Description plugin
+            $desc = $this->getMeta('plugin_description', 'keywords');
+
+            //use otherwise the default dokuwiki abstract
+            if (!$desc) {
+                $desc = $this->getMeta('description', 'abstract');
+            }
+            if (blank($desc)) {
+                $desc = '';
+            }
+        }
+        $this->page['desc'] = $desc;
+    }
+
+    /**
+     * Retrieve user
+     */
+    private function getUser()
+    {
+        if (array_key_exists('user', $this->page)) return;
+
+        $content = null;
+        switch ($this->column['user']) {
+            case 1:
+                $content = $this->getMeta('creator');
+                $content = hsc($content);
+                break;
+            case 2:
+                $users = $this->getMeta('contributor');
+                if (is_array($users)) {
+                    $content = join(', ', $users);
+                    $content = hsc($content);
+                }
+                break;
+            case 3:
+                $content = $this->getShowUserAsContent($this->getMeta('user'));
+                break;
+            case 4:
+                $users = $this->getMeta('contributor');
+                if (is_array($users)) {
+                    $content = '';
+                    $item = 0;
+                    foreach ($users as $userid => $fullname) {
+                        $item++;
+                        $content .= $this->getShowUserAsContent($userid);
+                        if ($item < count($users)) {
+                            $content .= ', ';
+                        }
+                    }
+                }
+                break;
+        }
+        $this->page['user'] = $content;
+    }
+
+    /**
+     * Retrieve date
+     */
+    private function getDate()
+    {
+        if (empty($this->page['date']) && !empty($this->page['exists'])) {
+            if ($this->column['date'] == 2) {
+                $this->page['date'] = $this->getMeta('date', 'modified');
+            } else {
+                $this->page['date'] = $this->getMeta('date', 'created');
+            }
         }
     }
 
