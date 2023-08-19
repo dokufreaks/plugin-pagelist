@@ -90,6 +90,11 @@ class helper_plugin_pagelist extends DokuWiki_Plugin
     protected $tag = null;
 
     /**
+     * @var int limits the number of rows shown, 0 is all.
+     */
+    private $limit;
+
+    /**
      * Constructor gets default preferences
      *
      * These can be overriden by plugins using this class
@@ -126,6 +131,7 @@ class helper_plugin_pagelist extends DokuWiki_Plugin
         ];
 
         $this->header = [];
+        $this->limit = 0;
     }
 
     public function getMethods()
@@ -294,6 +300,9 @@ class helper_plugin_pagelist extends DokuWiki_Plugin
             //for plugins to propose a default value for the sortby flag
             if (substr($flag, 0, 14) == 'defaultsortby=') {
                 $this->defaultSortKey = substr($flag, 14);
+            }
+            if (substr($flag, 0, 6) == 'limit=') {
+                $this->limit = (int) substr($flag, 6);
             }
 
             /** @see $column array, enable/disable columns */
@@ -624,8 +633,14 @@ class helper_plugin_pagelist extends DokuWiki_Plugin
             }
         }
 
+        $cnt = 0;
         foreach ($this->pages as $page) {
             $this->renderPageRow($page);
+
+            $cnt++;
+            if($this->limit > 0 && $cnt >= $this->limit){
+                break;
+            }
         }
 
         if ($this->style != 'simplelist') {
