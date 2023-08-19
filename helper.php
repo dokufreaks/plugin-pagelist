@@ -439,10 +439,25 @@ class helper_plugin_pagelist extends DokuWiki_Plugin
         if ($this->sortKey !== '') {
             $sortKey = $this->page[$this->sortKey] ?? false;
             if ($sortKey === false) {
+                //entry corresponding to sortKey is not yet set
                 if ($this->sortKey == "draft") {
                     $this->page['draft'] = $this->getMeta('type') == 'draft';
                 }
                 $this->getPageData($id);
+                if ($this->sortKey == "pagename") {
+                    $this->page['pagename'] = noNS($id);
+                }
+                if ($this->sortKey == "ns") {
+                    // sorts pages before namespaces using a zero byte
+                    // see https://github.com/dokufreaks/plugin-tag/commit/7df7f2cb315c5a3a21b9dfacae89bd3ee661c690
+                    $pos = strrpos($id, ':');
+                    if ($pos === false) {
+                        $sortkey = "\0".$id;
+                    } else {
+                        $sortkey = substr_replace($id, "\0\0", $pos, 1);
+                    }
+                    $this->page['ns'] = str_replace(':', "\0", $sortkey);
+                }
                 if ($this->sortKey == "date") {
                     $this->getDate();
                 }
