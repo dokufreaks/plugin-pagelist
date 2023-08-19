@@ -58,7 +58,7 @@ class helper_plugin_pagelist extends DokuWiki_Plugin
     public $rsort = false;
 
     /**
-     * @var string the data entry to use as key for sorting
+     * @var string the item to use as key for sorting
      */
     private $sortKey;
     /**
@@ -101,6 +101,10 @@ class helper_plugin_pagelist extends DokuWiki_Plugin
         $this->showfirsthl = $this->getConf('showfirsthl'); //on-off
         $this->sort = $this->getConf('sort'); //on-off
         $this->rsort = $this->getConf('rsort'); //on-off
+        $this->sortKey = $this->getConf('sortby'); //string
+        if($this->sortKey) {
+            $this->sort = true;
+        }
 
         $this->plugins = [
             'discussion' => ['comments'],
@@ -122,7 +126,6 @@ class helper_plugin_pagelist extends DokuWiki_Plugin
         ];
 
         $this->header = [];
-        $this->sortKey = '';
     }
 
     public function getMethods()
@@ -288,6 +291,7 @@ class helper_plugin_pagelist extends DokuWiki_Plugin
                 $this->sortKey = substr($flag, 7);
                 $this->sort = true;
             }
+            //for plugins to propose a default value for the sortby flag
             if (substr($flag, 0, 14) == 'defaultsortby=') {
                 $this->defaultSortKey = substr($flag, 14);
             }
