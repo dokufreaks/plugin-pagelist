@@ -61,6 +61,10 @@ class helper_plugin_pagelist extends DokuWiki_Plugin
      * @var string the data entry to use as key for sorting
      */
     private $sortKey;
+    /**
+     * @var string let plugins set their own default without already enabling sorting
+     */
+    private $defaultSortKey = 'id';
 
     /**
      * @var array with entries: 'pluginname' => ['columnname1', 'columnname2'], registers the available columns per plugin
@@ -236,6 +240,7 @@ class helper_plugin_pagelist extends DokuWiki_Plugin
         if (!is_array($flags)) return false;
 
         foreach ($flags as $flag) {
+            echo ' '.$flag;
             switch ($flag) {
                 case 'default':
                     $this->style = 'default';
@@ -284,6 +289,9 @@ class helper_plugin_pagelist extends DokuWiki_Plugin
                 $this->sortKey = substr($flag, 7);
                 $this->sort = true;
             }
+            if (substr($flag, 0, 14) == 'defaultsortby=') {
+                $this->defaultSortKey = substr($flag, 14);
+            }
 
             /** @see $column array, enable/disable columns */
             if (substr($flag, 0, 2) == 'no') {
@@ -298,7 +306,7 @@ class helper_plugin_pagelist extends DokuWiki_Plugin
             }
         }
         if ($this->sortKey === '' && $this->sort) {
-            $this->sortKey = 'id';
+            $this->sortKey = $this->defaultSortKey;
         }
         return true;
     }
