@@ -240,7 +240,6 @@ class helper_plugin_pagelist extends DokuWiki_Plugin
         if (!is_array($flags)) return false;
 
         foreach ($flags as $flag) {
-            echo ' '.$flag;
             switch ($flag) {
                 case 'default':
                     $this->style = 'default';
