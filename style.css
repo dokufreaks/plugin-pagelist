@@ -25,7 +25,7 @@ div.dokuwiki table.ul td {
 }
 
 div.dokuwiki table.ul ul {
-  margin: 0 0 0 1.5em;
+  margin: 0 0 0 0;
 }
 
 div.dokuwiki table.pagelist th,
