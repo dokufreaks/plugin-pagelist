@@ -32,7 +32,7 @@ class helper_plugin_pagelist extends DokuWiki_Plugin
     /**
      * Associated array, where the keys are the sortkey.
      * For each row an array is added which must contain at least the key 'id', can further contain as well :
-     *  'title', 'date', 'user', 'desc', 'comments', 'tags', 'status' and 'priority', see addPage() for details
+     *  'title', 'date', 'user', 'desc', 'summary', 'comments', 'tags', 'status' and 'priority', see addPage() for details
      * @var array[] array of arrays with the entries: 'columnname' => value, or if plugin the html for in cell
      */
     protected $pages = [];
@@ -123,6 +123,7 @@ class helper_plugin_pagelist extends DokuWiki_Plugin
             'date' => $this->getConf('showdate'), //0,1,2
             'user' => $this->getConf('showuser'), //0,1,2,3,4
             'desc' => $this->getConf('showdesc'), //0,160,500
+            'summary' => false,
             'comments' => $this->getConf('showcomments'), //on-off
             'linkbacks' => $this->getConf('showlinkbacks'), //on-off
             'tags' => $this->getConf('showtags'), //on-off
@@ -241,7 +242,8 @@ class helper_plugin_pagelist extends DokuWiki_Plugin
      *     for styling: 'default', 'table', 'list', 'simplelist'
      *     for dis/enabling header: '(no)header', and show titel for page column with '(no)firsthl',
      *     for sorting: 'sort', 'rsort', 'nosort', 'sortby=<columnname>'
-     *     for dis/enabling columns: accepts keys of $column, e.g. default: '(no)date', 'user', 'desc', 'comments', 'linkbacks', 'tags', 'image', 'diff'
+     *     for dis/enabling columns: accepts keys of $column, e.g. default: '(no)date', 'user', 'desc', 'summary',
+     *        'comments', 'linkbacks', 'tags', 'image', 'diff'
      * @return bool, false if no array given
      */
     public function setFlags($flags)
@@ -377,7 +379,7 @@ class helper_plugin_pagelist extends DokuWiki_Plugin
         // header row
         if ($this->showheader) {
             $this->doc .= '<tr>';
-            $columns = ['page', 'date', 'user', 'desc', 'diff'];
+            $columns = ['page', 'date', 'user', 'desc', 'diff', 'summary'];
             //image column first
             if ($this->column['image']) {
                 if (empty($this->header['image'])) {
@@ -411,16 +413,17 @@ class helper_plugin_pagelist extends DokuWiki_Plugin
     }
 
     /**
-     * (required) Add page row to the list, call for every row
+     * (required) Add page row to the list, call for every row. In the $page array is 'id' required, other entries are optional.
      *
      * @param array $page
      *       'id'     => (required) string page id
-     *       'title'  => string First headline, otherwise page id TODO always replaced by id or title from metadata?
+     *       'title'  => string First headline, otherwise page id; exception: if titleimage is used this is used for the image title&alt attribute
      *       'titleimage' => string media id
      *       'date'   => int timestamp of creation date, otherwise modification date (e.g. sometimes needed for plugin)
      *       'user'   => string $meta['creator']
      *       'desc'   => string $meta['description']['abstract']
      *       'description' => string description set via pagelist syntax
+     *       'summary' => string summary of the last change of the page $meta['last_change']['sum']
      *       'exists' => bool page_exists($id)
      *       'perm'   => int auth_quickaclcheck($id)
      *       'draft'  => string $meta['type'] set by blog plugin
@@ -453,6 +456,9 @@ class helper_plugin_pagelist extends DokuWiki_Plugin
             if (!empty($this->column['desc'])) {
                 $this->getDescription();
             }
+            if (!empty($this->column['summary'])) {
+                $this->getSummary();
+            }
         }
 
         $sortKey = '';
@@ -483,6 +489,9 @@ class helper_plugin_pagelist extends DokuWiki_Plugin
                 }
                 if ($this->sortKey == "desc") {
                     $this->getDescription();
+                }
+                if ($this->sortKey == "summary") {
+                    $this->getSummary();
                 }
                 if ($this->sortKey == "user") {
                     $this->getUser();
@@ -588,6 +597,9 @@ class helper_plugin_pagelist extends DokuWiki_Plugin
             }
             if (!empty($this->column['diff'])) {
                 $this->printDiffCell($id);
+            }
+            if (!empty($this->column['summary'])) {
+                $this->printSummary();
             }
             foreach ($this->plugins as $plugin => $columns) {
                 foreach ($columns as $col) {
@@ -781,6 +793,14 @@ class helper_plugin_pagelist extends DokuWiki_Plugin
     }
 
     /**
+     * Print the summary from the last page change
+     */
+    protected function printSummary()
+    {
+        return $this->printCell('summary', hsc($this->page['summary']));
+    }
+
+    /**
      * Plugins - respective plugins must be installed!
      *
      * @param string $plugin pluginname
@@ -853,7 +873,7 @@ class helper_plugin_pagelist extends DokuWiki_Plugin
             }
             $this->page['exists'] = @file_exists($this->page['file']);
         }
-        //retrieve title, but not if titleimage which can have eventually its own
+        //retrieve title, but not if titleimage which can have eventually its own title
         if (empty($this->page['titleimage'])) {
             //not overwrite titles in earlier provided data
             if (blank($this->page['title']) && $this->showfirsthl) {
@@ -892,6 +912,13 @@ class helper_plugin_pagelist extends DokuWiki_Plugin
         $this->page['desc'] = $desc;
     }
 
+    private function getSummary()
+    {
+        if (array_key_exists('summary', $this->page)) return;
+
+        $summary = $this->getMeta('last_change', 'sum');
+        $this->page['summary'] = $summary;
+    }
     /**
      * Retrieve user
      */
