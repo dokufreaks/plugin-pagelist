@@ -688,7 +688,7 @@ class helper_plugin_pagelist extends DokuWiki_Plugin
 
         // produce output
         $section = !empty($this->page['section']) ? '#' . $this->page['section'] : '';
-        $content = '<a href="' . wl($id) . $section . '" class="' . $class . '" title="' . $id . '">' . $title . '</a>';
+        $content = '<a href="' . wl($id) . $section . '" class="' . $class . '" title="' . $id . '"  data-wiki-id="' . $id . '">' . $title . '</a>';
         if ($this->style == 'list') {
             $content = '<ul><li>' . $content . '</li></ul>';
         }
