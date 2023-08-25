@@ -5,7 +5,7 @@
  * @license    GPL 2 (http://www.gnu.org/licenses/gpl.html)
  * @author     Esther Brunner <wikidesign@gmail.com>
  */
- 
+
 // for the configuration manager
 $lang['style']            = 'Style of pagelist';
 $lang['style_o_default']  = 'default';
@@ -36,5 +36,4 @@ $lang['showimage']        = 'show image column (Pageimage Plugin needed)';
 $lang['showdiff']         = 'show link to the diff page';
 $lang['sort']             = 'sort pages by pagename';
 $lang['rsort']            = 'reverse sort pages by pagename';
-
-//Setup VIM: ex: et ts=2 :
+$lang['sortby']           = 'sort the page by the given item e.g. <code>id</code>, <code>pagename</code>, <code>ns</code>, <code>title</code>, <code>date</code>, <code>desc</code>, <code>user</code> etc or columns from plugins';

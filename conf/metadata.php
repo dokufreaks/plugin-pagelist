@@ -20,5 +20,4 @@ $meta['showimage']    = array('onoff');
 $meta['showdiff']     = array('onoff');
 $meta['sort']         = array('onoff');
 $meta['rsort']        = array('onoff');
-
-//Setup VIM: ex: et ts=2 :
+$meta['sortby']       = array('string', '_pattern' => '/^([^&=]*)$/');

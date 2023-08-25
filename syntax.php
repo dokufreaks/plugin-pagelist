@@ -121,17 +121,6 @@ class syntax_plugin_pagelist extends DokuWiki_Syntax_Plugin
             $pagelist->setFlags($flags);
             $pagelist->startList();
 
-            if ($pagelist->sort || $pagelist->rsort) {        // pages should be sorted by pagename
-                $fnc = function ($a, $b) {
-                    return strcmp(noNS($a["id"]), noNS($b["id"]));
-                };
-                usort($pages, $fnc);
-                // rsort is true - reverse sort the pages
-                if ($pagelist->rsort) {
-                    krsort($pages);
-                }
-            }
-
             foreach ($pages as $page) {
                 $pagelist->addPage($page);
             }

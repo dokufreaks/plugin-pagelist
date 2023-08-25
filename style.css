@@ -1,3 +1,13 @@
+/* default three styles:
+ - table.plgn__pglist.pagelist (default)
+ - table.plgn__pglist.ul (list-option)
+ - table.plgn__pglist.inline (table-option: dokuwiki's table style)
+
+ extra class .plgn__pglist is always applied to table
+
+ Simple list is an default ul-li without class
+ */
+
 div.dokuwiki table.pagelist,
 div.dokuwiki table.ul {
   border: 0;
@@ -25,33 +35,23 @@ div.dokuwiki table.ul td {
 }
 
 div.dokuwiki table.ul ul {
-  margin: 0 0 0 1.5em;
+  margin: 0;
 }
 
 div.dokuwiki table.pagelist th,
 div.dokuwiki table.ul th {
   background-color: __background_alt__;
+  color: __text_neu__;
+  font-size: 90%;
 }
 
-div.dokuwiki th.page,
-div.dokuwiki th.date,
-div.dokuwiki th.user,
-div.dokuwiki th.desc,
-div.dokuwiki th.comments,
-div.dokuwiki th.linkbacks,
-div.dokuwiki th.tags,
-div.dokuwiki th.diff,
-div.dokuwiki td.date,
-div.dokuwiki td.user,
-div.dokuwiki td.desc,
-div.dokuwiki td.comments,
-div.dokuwiki td.linkbacks,
-div.dokuwiki td.tags,
-div.dokuwiki td.diff {
+div.dokuwiki table.pagelist td,
+div.dokuwiki table.ul td {
   color: __text_neu__;
   font-size: 80%;
 }
 
-div.dokuwiki td.date {
-  text-align: left;
+div.dokuwiki table.pagelist td.page,
+div.dokuwiki table.ul td.page {
+  font-size: 100%;
 }
