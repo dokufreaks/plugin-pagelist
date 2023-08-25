@@ -629,7 +629,7 @@ class helper_plugin_pagelist extends DokuWiki_Plugin
         if ($this->sort) {
             Sort::ksort($this->pages);
             if ($this->rsort) {
-                arsort($this->pages);
+                $this->pages = array_reverse($this->pages, true);
             }
         }
 
