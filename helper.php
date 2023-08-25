@@ -351,7 +351,7 @@ class helper_plugin_pagelist extends DokuWiki_Plugin
 
         if ($class) {
             if ($callerClass) {
-                $class .= ' ' . $callerClass;
+                $class .= ' plgn__pglist ' . $callerClass;
             }
             $this->doc = '<div class="table"><table class="' . $class . '">';
         } else {
