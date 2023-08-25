@@ -12,6 +12,6 @@ $lang['date']       = 'Date';
 $lang['user']       = 'User';
 $lang['desc']       = 'Description';
 $lang['diff']       = 'Differences';
+$lang['summary']    = 'Edit summery';
 $lang['diff_title'] = 'Show differences to current revisions';
 $lang['diff_alt']   = 'Show differences to current revisions';
-//Setup VIM: ex: et ts=2 enc=utf-8 :
