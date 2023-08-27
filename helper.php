@@ -462,54 +462,7 @@ class helper_plugin_pagelist extends DokuWiki_Plugin
             }
         }
 
-        $sortKey = '';
-        if ($this->sortKey !== '') {
-            $sortKey = $this->page[$this->sortKey] ?? false;
-            if ($sortKey === false) {
-                //entry corresponding to sortKey is not yet set
-                if ($this->sortKey == "draft") {
-                    $this->page['draft'] = $this->getMeta('type') == 'draft';
-                }
-                $this->getPageData($id);
-                if ($this->sortKey == "pagename") {
-                    $this->page['pagename'] = noNS($id);
-                }
-                if ($this->sortKey == "ns") {
-                    // sorts pages before namespaces using a zero byte
-                    // see https://github.com/dokufreaks/plugin-tag/commit/7df7f2cb315c5a3a21b9dfacae89bd3ee661c690
-                    $pos = strrpos($id, ':');
-                    if ($pos === false) {
-                        $sortkey = "\0".$id;
-                    } else {
-                        $sortkey = substr_replace($id, "\0\0", $pos, 1);
-                    }
-                    $this->page['ns'] = str_replace(':', "\0", $sortkey);
-                }
-                if ($this->sortKey == "date") {
-                    $this->getDate();
-                }
-                if ($this->sortKey == "desc") {
-                    $this->getDescription();
-                }
-                if ($this->sortKey == "summary") {
-                    $this->getSummary();
-                }
-                if ($this->sortKey == "user") {
-                    $this->getUser();
-                }
-                foreach ($this->plugins as $plugin => $columns) {
-                    foreach ($columns as $col) {
-                        if ($this->sortKey == $col) {
-                            if (!isset($this->page[$col])) {
-                                $this->page[$col] = $this->$plugin->td($id, $col);
-                            }
-                        }
-                    }
-                }
-                $sortKey = $this->page[$this->sortKey] ?? 9999999999999999; //TODO mostly used for non-existing pages. 999 works only for dates?
-            }
-        }
-
+        $sortKey = $this->getSortKey($id);
         if (!blank($sortKey)) {
             //unique key needed, otherwise entries are overwritten
             $sortKey = $this->uniqueKey($sortKey, $this->pages);
@@ -563,55 +516,7 @@ class helper_plugin_pagelist extends DokuWiki_Plugin
         $this->meta = null; // should not be used here
 
         $id = $this->page['id'];
-        if ($this->style != 'simplelist') {
-            // priority and draft
-            $class = '';
-            if (isset($this->page['priority'])) {
-                $class .= 'priority' . $this->page['priority'] . ' ';
-            }
-            if (!empty($this->page['draft'])) {
-                $class .= 'draft ';
-            }
-            if (!empty($this->page['class'])) {
-                $class .= $this->page['class'];
-            }
-
-            if (!empty($class)) {
-                $class = ' class="' . $class . '"';
-            }
-
-            $this->doc .= '<tr' . $class . '>';
-            //image column first
-            if (!empty($this->column['image'])) {
-                $this->printPluginCell('pageimage', 'image', $id);
-            }
-            $this->printPageCell($id);
-
-            if (!empty($this->column['date'])) {
-                $this->printDateCell();
-            }
-            if (!empty($this->column['user'])) {
-                $this->printUserCell();
-            }
-            if (!empty($this->column['desc'])) {
-                $this->printDescriptionCell();
-            }
-            if (!empty($this->column['diff'])) {
-                $this->printDiffCell($id);
-            }
-            if (!empty($this->column['summary'])) {
-                $this->printSummary();
-            }
-            foreach ($this->plugins as $plugin => $columns) {
-                foreach ($columns as $col) {
-                    if (!empty($this->column[$col]) && $col != 'image') {
-                        $this->printPluginCell($plugin, $col, $id);
-                    }
-                }
-            }
-
-            $this->doc .= '</tr>';
-        } else {
+        if ($this->style == 'simplelist') {
             // simplelist is enabled; just output pagename
             $this->doc .= '<li>';
             if (page_exists($id)) {
@@ -628,7 +533,56 @@ class helper_plugin_pagelist extends DokuWiki_Plugin
             $content = '<a href="' . wl($id) . '" class="' . $class . '" title="' . $id . '">' . $title . '</a>';
             $this->doc .= $content;
             $this->doc .= '</li>';
+            return;
         }
+        // default pagelist, list or table style:
+
+        // priority and draft
+        $class = '';
+        if (isset($this->page['priority'])) {
+            $class .= 'priority' . $this->page['priority'] . ' ';
+        }
+        if (!empty($this->page['draft'])) {
+            $class .= 'draft ';
+        }
+        if (!empty($this->page['class'])) {
+            $class .= $this->page['class'];
+        }
+
+        if (!empty($class)) {
+            $class = ' class="' . $class . '"';
+        }
+
+        $this->doc .= '<tr' . $class . '>';
+        //image column first
+        if (!empty($this->column['image'])) {
+            $this->printPluginCell('pageimage', 'image', $id);
+        }
+        $this->printPageCell($id);
+
+        if (!empty($this->column['date'])) {
+            $this->printDateCell();
+        }
+        if (!empty($this->column['user'])) {
+            $this->printUserCell();
+        }
+        if (!empty($this->column['desc'])) {
+            $this->printDescriptionCell();
+        }
+        if (!empty($this->column['diff'])) {
+            $this->printDiffCell($id);
+        }
+        if (!empty($this->column['summary'])) {
+            $this->printSummary();
+        }
+        foreach ($this->plugins as $plugin => $columns) {
+            foreach ($columns as $col) {
+                if (!empty($this->column[$col]) && $col != 'image') {
+                    $this->printPluginCell($plugin, $col, $id);
+                }
+            }
+        }
+        $this->doc .= '</tr>';
     }
 
     /**
@@ -656,14 +610,14 @@ class helper_plugin_pagelist extends DokuWiki_Plugin
             }
         }
 
-        if ($this->style != 'simplelist') {
+        if ($this->style == 'simplelist') {
+            $this->doc .= '</ul>';
+        } else {
             if (!isset($this->page)) {
                 $this->doc = '';
             } else {
                 $this->doc .= '</table></div>';
             }
-        } else {
-            $this->doc .= '</ul>';
         }
 
         // reset defaults
@@ -973,6 +927,64 @@ class helper_plugin_pagelist extends DokuWiki_Plugin
                 $this->page['date'] = $this->getMeta('date', 'created');
             }
         }
+    }
+
+    /**
+     * Determines the sortkey if sorting is requested
+     *
+     * @param string $id page id
+     * @return string
+     */
+    private function getSortKey($id)
+    {
+        $sortKey = '';
+        if ($this->sortKey !== '') {
+            $sortKey = $this->page[$this->sortKey] ?? false;
+            if ($sortKey === false) {
+                //entry corresponding to sortKey is not yet set
+                if ($this->sortKey == "draft") {
+                    $this->page['draft'] = $this->getMeta('type') == 'draft';
+                }
+                $this->getPageData($id);
+                if ($this->sortKey == "pagename") {
+                    $this->page['pagename'] = noNS($id);
+                }
+                if ($this->sortKey == "ns") {
+                    // sorts pages before namespaces using a zero byte
+                    // see https://github.com/dokufreaks/plugin-tag/commit/7df7f2cb315c5a3a21b9dfacae89bd3ee661c690
+                    $pos = strrpos($id, ':');
+                    if ($pos === false) {
+                        $sortkey = "\0" . $id;
+                    } else {
+                        $sortkey = substr_replace($id, "\0\0", $pos, 1);
+                    }
+                    $this->page['ns'] = str_replace(':', "\0", $sortkey);
+                }
+                if ($this->sortKey == "date") {
+                    $this->getDate();
+                }
+                if ($this->sortKey == "desc") {
+                    $this->getDescription();
+                }
+                if ($this->sortKey == "summary") {
+                    $this->getSummary();
+                }
+                if ($this->sortKey == "user") {
+                    $this->getUser();
+                }
+                foreach ($this->plugins as $plugin => $columns) {
+                    foreach ($columns as $col) {
+                        if ($this->sortKey == $col) {
+                            if (!isset($this->page[$col])) {
+                                $this->page[$col] = $this->$plugin->td($id, $col);
+                            }
+                        }
+                    }
+                }
+                $sortKey = $this->page[$this->sortKey] ?? 9999999999999999; //TODO mostly used for non-existing pages. 999 works only for dates?
+            }
+        }
+        return $sortKey;
     }
 
 }
