@@ -1,7 +1,7 @@
 base   pagelist
 author Matthias Schulte, Michael Hamann, Michael Klier, Gina Haeussge
 email  michael@content-space.de
-date   2023-08-26
+date   2023-08-27
 name   Pagelist Plugin
 desc   Lists pages in a nice formatted way
 url    https://www.dokuwiki.org/plugin:pagelist
