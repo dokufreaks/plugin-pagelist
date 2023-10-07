@@ -36,3 +36,4 @@ $lang['showimage']             = 'Afficher la colonne image (greffon Pageimage n
 $lang['showdiff']              = 'Afficher un lien vers les anciennes révisions';
 $lang['sort']                  = 'Trier selon le nom de page ("pagename")';
 $lang['rsort']                 = 'Inverser le tri selon le nom des pages';
+$lang['sortby']                = 'Trie les pages selon le critère donné. p.e. <code>id</code>, <code>pagename</code>, <code>ns</code>, <code>title</code>, <code>date</code>, <code>desc</code>, <code>user</code> etc… ou des colonnes de greffons.';
