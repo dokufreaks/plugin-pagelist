@@ -36,3 +36,4 @@ $lang['showimage']             = 'toon afbeeldingskolom (Pageimage Plugin nodig)
 $lang['showdiff']              = 'toon link naar verschil pagina';
 $lang['sort']                  = 'sorteer pagina\'s op paginanaam';
 $lang['rsort']                 = 'sorteer pagina\'s omgekeerd op paginanaam';
+$lang['sortby']                = 'sorteer de pagina met de gegeven item, bijvoorbeeld <code>id</code>, <code>pagename</code>, <code>ns</code>, <code>title</code>, <code>date</code>, <code>desc</code>, <code>user</code> etc of kolommen van plugins';
