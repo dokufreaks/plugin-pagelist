@@ -3,9 +3,9 @@
 /**
  * @license    GPL 2 (http://www.gnu.org/licenses/gpl.html)
  *
+ * @author Aleksandr Selivanov <alexgearbox@yandex.ru>
  * @author Vyacheslav Strenadko <bryanskmap@yandex.ru>
  * @author Yuriy Skalko <yuriy.skalko@gmail.com>
- * @author Aleksandr Selivanov <alexgearbox@gmail.com>
  * @author RainbowSpike <1@2.ru>
  */
 $lang['style']                 = 'Стиль списка страниц';
@@ -22,17 +22,17 @@ $lang['showuser']              = 'Столбец имён пользовател
 $lang['showuser_o_0']          = 'скрыть';
 $lang['showuser_o_1']          = 'автор';
 $lang['showuser_o_2']          = 'соавторы';
-$lang['showuser_o_3']          = 'создатель (в формате "showuseras")';
-$lang['showuser_o_4']          = 'участники (в формате "showuseras")';
+$lang['showuser_o_3']          = 'автор (в формате "showuseras")';
+$lang['showuser_o_4']          = 'соавторы (в формате "showuseras")';
 $lang['showdesc']              = 'Столбец описания';
 $lang['showdesc_o_0']          = 'скрыть';
-$lang['showdesc_o_160']        = 'Макс. 160 символов';
-$lang['showdesc_o_500']        = 'Макс. 500 символов';
-$lang['showcomments']          = 'Отображать столбец с комментариями (требуется плагин Discussion)';
-$lang['showlinkbacks']         = 'Отображать столбец с обратными ссылками (требуется плагин Linkback)';
-$lang['showtags']              = 'Отображать столбец с тегами (требуется плагин Tag)';
-$lang['showfirsthl']           = 'Отображать заголовок вместо имени страницы';
-$lang['showimage']             = 'показать столбец изображений (требуется плагин Pageimage)';
-$lang['showdiff']              = 'Отображать ссылку на страницу отличий';
+$lang['showdesc_o_160']        = 'макс. 160 символов';
+$lang['showdesc_o_500']        = 'макс. 500 символов';
+$lang['showcomments']          = 'Показывать столбец с комментариями (требуется плагин Discussion)';
+$lang['showlinkbacks']         = 'Показывать столбец с обратными ссылками (требуется плагин Linkback)';
+$lang['showtags']              = 'Показывать столбец с тегами (требуется плагин Tag)';
+$lang['showfirsthl']           = 'Показывать заголовок страницы вместо имени страницы';
+$lang['showimage']             = 'Показывать столбец изображений (требуется плагин Pageimage)';
+$lang['showdiff']              = 'Показывать ссылку на страницу отличий';
 $lang['sort']                  = 'Сортировка страниц по имени';
 $lang['rsort']                 = 'Обратная сортировка страниц по имени';
