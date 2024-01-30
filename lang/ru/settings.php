@@ -3,6 +3,7 @@
 /**
  * @license    GPL 2 (http://www.gnu.org/licenses/gpl.html)
  *
+ * @author Impeck <impeck@ya.ru>
  * @author Aleksandr Selivanov <alexgearbox@yandex.ru>
  * @author Vyacheslav Strenadko <bryanskmap@yandex.ru>
  * @author Yuriy Skalko <yuriy.skalko@gmail.com>
@@ -36,3 +37,4 @@ $lang['showimage']             = 'Показывать столбец изобр
 $lang['showdiff']              = 'Показывать ссылку на страницу отличий';
 $lang['sort']                  = 'Сортировка страниц по имени';
 $lang['rsort']                 = 'Обратная сортировка страниц по имени';
+$lang['sortby']                = 'отсортировать страницу по указанному элементу, например, <code>id</code>, <code>pagename</code>, <code>ns</code>, <code>title</code>, <code>date</code>, <code>desc</code>, <code>user</code> и т. д., или столбцам из плагинов.';
