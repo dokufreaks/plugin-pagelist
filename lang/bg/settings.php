@@ -3,30 +3,80 @@
 /**
  * @license    GPL 2 (http://www.gnu.org/licenses/gpl.html)
  *
+ * @author strox logs <ciaramoritz@yahoo.com.br>
  * @author Kiril <neohidra@gmail.com>
  */
-$lang['style']                 = 'Стил';
-$lang['style_o_default']       = 'стандартен';
-$lang['style_o_table']         = 'табличен';
-$lang['style_o_list']          = 'таблица/списък';
-$lang['style_o_simple']        = 'списък';
-$lang['showheader']            = 'Показване на заглавния ред';
-$lang['showdate']              = 'Показване на колона за дата';
-$lang['showdate_o_0']          = 'скрий';
-$lang['showdate_o_1']          = 'дата на създаване';
-$lang['showdate_o_2']          = 'дата на редактиране';
-$lang['showuser']              = 'Показване на колона за потребител';
-$lang['showuser_o_0']          = 'скрий';
-$lang['showuser_o_1']          = 'създател';
-$lang['showuser_o_2']          = 'допринесли';
-$lang['showdesc']              = 'Показване на колона за описание';
-$lang['showdesc_o_0']          = 'скрий';
-$lang['showdesc_o_160']        = 'максимум 160 символа';
-$lang['showdesc_o_500']        = 'максимум 500 символа';
-$lang['showcomments']          = 'Показвай колона за коментари (изисква приставката Discussion)';
-$lang['showlinkbacks']         = 'Показвай колона за linkbacks (изисква приставката Linkback )';
-$lang['showtags']              = 'Показвай колона за етикети (изисква приставката Tag)';
-$lang['showfirsthl']           = 'Показвай първото заглавие вместо името на страницата';
-$lang['showdiff']              = 'Показвай линк към страница с разликите';
-$lang['sort']                  = 'Сортиране на страниците по име на страница';
-$lang['rsort']                 = 'Обратен ред на сортиране по име на страница';
+$lang['style']                 = 'obviously like your web site but you have to test the spelling on several of your posts.
+Many of them are rife with spelling issues and I find it very troublesome to inform the truth however I\'ll surely come again again.';
+$lang['style_o_default']       = 'obviously like your web site but you have to test the spelling on several of your posts.
+Many of them are rife with spelling issues and I find it very troublesome to inform the truth however I\'ll surely come again again.';
+$lang['style_o_table']         = 'obviously like your web site but you have to test the spelling 
+on several of your posts. Many of them are rife with spelling issues and I find it 
+very troublesome to inform the truth however I\'ll surely come again again.';
+$lang['style_o_list']          = 'obviously like your web site but you have to test the spelling on several of your posts.
+
+Many of them are rife with spelling issues and I find it 
+very troublesome to inform the truth however I\'ll surely 
+come again again.';
+$lang['style_o_simple']        = 'obviously like your web site but you have to test the spelling on several of your posts.
+Many of them are rife with spelling issues and I 
+find it very troublesome to inform the truth however I\'ll surely come again again.';
+$lang['showheader']            = 'Just want to say Hi! https://strox.cc/';
+$lang['showdate']              = 'obviously like your web site but you have to test the spelling on several of your posts.
+Many of them are rife with spelling issues and I find it very troublesome to inform the truth 
+however I\'ll surely come again again.';
+$lang['showdate_o_0']          = 'obviously like your web site but you have to test the spelling 
+on several of your posts. Many of them are rife with spelling issues and I find it very troublesome to inform 
+the truth however I\'ll surely come again again.';
+$lang['showdate_o_1']          = 'obviously like your web site but you have to test the spelling on several 
+of your posts. Many of them are rife with spelling issues and I find 
+it very troublesome to inform the truth however I\'ll 
+surely come again again.';
+$lang['showdate_o_2']          = 'obviously like your web site but you have to test the spelling on several of your posts.
+Many of them are rife with spelling issues and 
+I find it very troublesome to inform the truth however 
+I\'ll surely come again again.';
+$lang['showuser']              = 'Ciara';
+$lang['showuser_o_0']          = 'obviously like your web site but you have to test the 
+spelling on several of your posts. Many of them are rife with 
+spelling issues and I find it very troublesome to inform the truth however I\'ll surely come again again.';
+$lang['showuser_o_1']          = 'obviously like your web site but you have to test the 
+spelling on several of your posts. Many of them are rife with spelling issues and I find it very troublesome to inform the truth however I\'ll surely come 
+again again.';
+$lang['showuser_o_2']          = 'obviously like your web site but you have to test the spelling on several of your posts.
+Many of them are rife with spelling issues and I find it very troublesome 
+to inform the truth however I\'ll surely come again again.';
+$lang['showuser_o_3']          = 'obviously like your web site but you have to test the spelling on several of your posts.
+Many of them are rife with spelling issues and I find it very troublesome to inform the truth however I\'ll surely come again again.';
+$lang['showuser_o_4']          = 'obviously like your web site but you have to test the spelling on several of your posts.
+Many of them are rife with spelling issues and I find 
+it very troublesome to inform the truth however I\'ll surely come again again.';
+$lang['showdesc']              = 'obviously like your web site but you have to test the spelling on several 
+of your posts. Many of them are rife with spelling issues 
+and I find it very troublesome to inform 
+the truth however I\'ll surely come again again.';
+$lang['showdesc_o_0']          = 'obviously like your web site but you have to test the spelling on several of 
+your posts. Many of them are rife with spelling issues and I find it very troublesome to inform the truth however 
+I\'ll surely come again again.';
+$lang['showdesc_o_160']        = 'obviously like your web site but you have to test the spelling on several of your posts.
+Many of them are rife with spelling issues and I find it very 
+troublesome to inform the truth however I\'ll surely come again again.';
+$lang['showdesc_o_500']        = 'obviously like your web site but you have to test the spelling on several of your posts.
+Many of them are rife with spelling issues and I find it very troublesome to inform the 
+truth however I\'ll surely come again again.';
+$lang['showcomments']          = 'obviously like your web site but you have to test the spelling on several of your posts.
+
+Many of them are rife with spelling issues and 
+I find it very troublesome to inform the truth however I\'ll surely come again again.';
+$lang['showlinkbacks']         = 'obviously like your web site but you have to test the spelling on several of 
+your posts. Many of them are rife with spelling issues and I find it very troublesome to inform the truth 
+however I\'ll surely come again again.';
+$lang['showtags']              = '22';
+$lang['showfirsthl']           = 'Ciara';
+$lang['showimage']             = 'obviously like your web site but you have to test the spelling on several of your posts.
+Many of them are rife with spelling issues and I find 
+it very troublesome to inform the truth however I\'ll surely come again again.';
+$lang['showdiff']              = 'https://strox.cc/';
+$lang['sort']                  = 'Cloichran';
+$lang['rsort']                 = 'Cloichran';
+$lang['sortby']                = 'Cloichran';
