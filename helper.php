@@ -107,7 +107,7 @@ class helper_plugin_pagelist extends DokuWiki_Plugin
         $this->sort = $this->getConf('sort'); //on-off
         $this->rsort = $this->getConf('rsort'); //on-off
         $this->sortKey = $this->getConf('sortby'); //string
-        $this->customCols = []; //Array to store custom cols configs
+        $this->defaultMetaParentName = $this->getConf('metaparentname'); //string
         if($this->sortKey) {
             $this->sort = true;
         }
@@ -134,6 +134,7 @@ class helper_plugin_pagelist extends DokuWiki_Plugin
 
         $this->header = [];
         $this->limit = 0;
+        $this->customCols = []; //Store arrays with each custom col config
     }
 
     public function getMethods()
@@ -324,7 +325,7 @@ class helper_plugin_pagelist extends DokuWiki_Plugin
              * Read params and set all custom cols configs
              * 
              * Declarative format:
-             * customcols=custommeta>datakey1,datakey2,>datakey3[%Y/%m/%d]
+             * customcols=custommeta:datakey1,datakey2,:datakey3[%Y/%m/%d]
              */
             if (substr($flag, 0, 11) == 'customcols=') {
                 $colsDeclarations = explode(",", substr($flag, 11));
@@ -333,14 +334,14 @@ class helper_plugin_pagelist extends DokuWiki_Plugin
                 foreach ($colsDeclarations as $index => $colDeclaration) {
 
                     // Parse and set meta parent name
-                    $colDeclarationParse = explode(">", $colDeclaration);
+                    $colDeclarationParse = explode(":", $colDeclaration);
                     if (count($colDeclarationParse) == 1) {
                         $colNameFormat = trim($colDeclarationParse[0]);
                         $colMetaParentName = '';
                     }
                     elseif (count($colDeclarationParse) == 2) {
                         $colNameFormat = trim($colDeclarationParse[1]);
-                        //Use last meta parent name if the current one is only set with ">"
+                        //Use last meta parent name if the current one is only set with ":"
                         if (trim($colDeclarationParse[0]) == '' && $lastMetaParentName != null) {
                             $colMetaParentName = $lastMetaParentName;
                         } else {
@@ -1059,7 +1060,15 @@ class helper_plugin_pagelist extends DokuWiki_Plugin
             if (!isset($customMetaArray[$customCol['name']])) return;
             $this->page[$customCol['name']] = $customMetaArray[$customCol['name']];
         } 
-        //If the data is in the high lvl meta structure
+        //In case if a defaultMetaParentName is config globaly
+        elseif ($this->defaultMetaParentName) {
+            if (array_key_exists($this->defaultMetaParentName, $this->page)) return;
+            $customMetaArray = $this->getMeta($this->defaultMetaParentName);
+
+            if (!isset($customMetaArray[$customCol['name']])) return;
+            $this->page[$customCol['name']] = $customMetaArray[$customCol['name']];
+        }
+        //If the data is in the high lvl meta structure and defaultMetaParentName is not config
         else {
             if (array_key_exists($customCol['name'], $this->page)) return;
             $this->page[$customCol['name']] = $this->getMeta($customCol['name']);
