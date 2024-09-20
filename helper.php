@@ -107,6 +107,7 @@ class helper_plugin_pagelist extends DokuWiki_Plugin
         $this->sort = $this->getConf('sort'); //on-off
         $this->rsort = $this->getConf('rsort'); //on-off
         $this->sortKey = $this->getConf('sortby'); //string
+        $this->defaultMetaParentName = $this->getConf('metaparentname'); //string
         if($this->sortKey) {
             $this->sort = true;
         }
@@ -133,6 +134,7 @@ class helper_plugin_pagelist extends DokuWiki_Plugin
 
         $this->header = [];
         $this->limit = 0;
+        $this->customCols = []; //Store arrays with each custom col config
     }
 
     public function getMethods()
@@ -318,6 +320,48 @@ class helper_plugin_pagelist extends DokuWiki_Plugin
             if (isset($this->column[$flag]) && $flag !== 'page') {
                 $this->column[$flag] = $value;
             }
+
+            /**
+             * Read params and set all custom cols configs
+             * 
+             * Declarative format:
+             * customcols=custommeta:datakey1,datakey2,:datakey3[%Y/%m/%d]
+             */
+            if (substr($flag, 0, 11) == 'customcols=') {
+                $colsDeclarations = explode(",", substr($flag, 11));
+
+                $lastMetaParentName = null;
+                foreach ($colsDeclarations as $index => $colDeclaration) {
+
+                    // Parse and set meta parent name
+                    $colDeclarationParse = explode(":", $colDeclaration);
+                    if (count($colDeclarationParse) == 1) {
+                        $colNameFormat = trim($colDeclarationParse[0]);
+                        $colMetaParentName = '';
+                    }
+                    elseif (count($colDeclarationParse) == 2) {
+                        $colNameFormat = trim($colDeclarationParse[1]);
+                        //Use last meta parent name if the current one is only set with ":"
+                        if (trim($colDeclarationParse[0]) == '' && $lastMetaParentName != null) {
+                            $colMetaParentName = $lastMetaParentName;
+                        } else {
+                            $colMetaParentName = $lastMetaParentName = trim($colDeclarationParse[0]);
+                        }
+                    }
+
+                    // Parse and set cols name and optional format
+                    $parseNameFormat = explode("[", $colNameFormat);
+                    $colName = trim($parseNameFormat[0]);
+                    $colFormat = null;
+                    if (count($parseNameFormat) == 2) {
+                        $colFormat = substr(trim($parseNameFormat[1]), 0, -1);
+                    }
+
+                    // Save col config
+                    $this->customCols[$index] = ['metaParentName' => $colMetaParentName,'name' => $colName,'format' => $colFormat];
+                    
+                }
+            }
         }
         if ($this->sortKey === '' && $this->sort) {
             $this->sortKey = $this->defaultSortKey;
@@ -408,6 +452,10 @@ class helper_plugin_pagelist extends DokuWiki_Plugin
                     }
                 }
             }
+            //custom cols header
+            foreach ($this->customCols as $customCol) {
+                $this->doc .= '<th>' . ucfirst($customCol['name']) . '</th>';
+            }
             $this->doc .= '</tr>';
         }
         return true;
@@ -459,6 +507,10 @@ class helper_plugin_pagelist extends DokuWiki_Plugin
             }
             if (!empty($this->column['summary'])) {
                 $this->getSummary();
+            }
+            // Get from page meta the custom col data
+            foreach ($this->customCols as $customCol) {
+                $this->getCustomColData($customCol);
             }
         }
 
@@ -581,6 +633,10 @@ class helper_plugin_pagelist extends DokuWiki_Plugin
                     $this->printPluginCell($plugin, $col, $id);
                 }
             }
+        }
+        // Print custom col data
+        foreach ($this->customCols as $customCol) {
+            $this->printCustomCol($customCol);
         }
         $this->doc .= '</tr>';
     }
@@ -790,6 +846,13 @@ class helper_plugin_pagelist extends DokuWiki_Plugin
         return $empty;
     }
 
+    // Print custom col and apply optional format (datetime format)
+    protected function printCustomCol($customCol) {
+        if ($customCol['format']) {
+            return $this->printCell($customCol['name'], dformat($this->page[$customCol['name']], $customCol['format']));
+        }
+        return $this->printCell($customCol['name'], $this->page[$customCol['name']]);
+    }
 
     /**
      * Get default value for an unset element
@@ -987,4 +1050,28 @@ class helper_plugin_pagelist extends DokuWiki_Plugin
         return $sortKey;
     }
 
+    // Get metadata from page
+    private function getCustomColData($customCol) {
+        //In case if the data is inside of array (parent) in the metadata
+        if ($customCol['metaParentName']) {
+            if (array_key_exists($customCol['metaParentName'], $this->page)) return;
+            $customMetaArray = $this->getMeta($customCol['metaParentName']);
+
+            if (!isset($customMetaArray[$customCol['name']])) return;
+            $this->page[$customCol['name']] = $customMetaArray[$customCol['name']];
+        } 
+        //In case if a defaultMetaParentName is config globaly
+        elseif ($this->defaultMetaParentName) {
+            if (array_key_exists($this->defaultMetaParentName, $this->page)) return;
+            $customMetaArray = $this->getMeta($this->defaultMetaParentName);
+
+            if (!isset($customMetaArray[$customCol['name']])) return;
+            $this->page[$customCol['name']] = $customMetaArray[$customCol['name']];
+        }
+        //If the data is in the high lvl meta structure and defaultMetaParentName is not config
+        else {
+            if (array_key_exists($customCol['name'], $this->page)) return;
+            $this->page[$customCol['name']] = $this->getMeta($customCol['name']);
+        }
+    }
 }
