@@ -334,11 +334,13 @@ class helper_plugin_pagelist extends DokuWiki_Plugin
                 if ($this->buttonsPosition != 'top' && $this->buttonsPosition != 'bottom') {
                     $this->buttonsPosition = 'bottom';
                 }
+                $this->pagination = true;
             }
 
             //**Pagination params. Regulate the max number of navigation show at the same time. Min possible value 2. Use -1 to disable*/
             if (substr($flag, 0, 14) == 'buttonswindow=') {
                 $this->buttonsWindow = (int) substr($flag, 14);
+                $this->pagination = true;
             }
 
             if (isset($this->column[$flag]) && $flag !== 'page') {
