@@ -21,3 +21,7 @@ $meta['showimage']    = array('onoff');
 $meta['sort']         = array('onoff');
 $meta['rsort']        = array('onoff');
 $meta['sortby']       = array('string', '_pattern' => '/^([^&=]*)$/');
+$meta['pagination']         = array('onoff');
+$meta['rowsperpage']        = array('string', '_pattern' => '/^\d+$/');
+$meta['buttonsposition']    = array('multichoice', '_choices' => array('top', 'bottom'));
+$meta['buttonswindow']      = array('string', '_pattern' => '/^-?\d+$/');

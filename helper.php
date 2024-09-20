@@ -110,6 +110,11 @@ class helper_plugin_pagelist extends DokuWiki_Plugin
         if($this->sortKey) {
             $this->sort = true;
         }
+        //Pagination flags
+        $this->pagination = $this->getConf('pagination'); //on-off
+        $this->rowsPerPage = $this->getConf('rowsperpage'); //string
+        $this->buttonsPosition = $this->getConf('buttonsposition'); //string (top, bottom)
+        $this->buttonsWindow = $this->getConf('buttonswindow'); //string
 
         $this->plugins = [
             'discussion' => ['comments'],
@@ -291,6 +296,8 @@ class helper_plugin_pagelist extends DokuWiki_Plugin
                 case 'showdiff':
                     $flag = 'diff';
                     break;
+                case 'pagination':
+                    $this->pagination = true;
             }
 
             // it is not required to set the sort flag, rsort flag will reverse.
@@ -313,6 +320,27 @@ class helper_plugin_pagelist extends DokuWiki_Plugin
                 $flag = substr($flag, 2);
             } else {
                 $value = true;
+            }
+
+            /**Pagination params. Rows per page */
+            if (substr($flag, 0, 12) == 'rowsperpage=') {
+                $this->rowsPerPage = (int) substr($flag, 12);
+                $this->pagination = true;
+            }
+
+            /**Pagination params. Navigation buttons position (top/bottom) */
+            if (substr($flag, 0, 16) == 'buttonsposition=') {
+                $this->buttonsPosition = substr($flag, 16);
+                if ($this->buttonsPosition != 'top' && $this->buttonsPosition != 'bottom') {
+                    $this->buttonsPosition = 'bottom';
+                }
+                $this->pagination = true;
+            }
+
+            //**Pagination params. Regulate the max number of navigation show at the same time. Min possible value 2. Use -1 to disable*/
+            if (substr($flag, 0, 14) == 'buttonswindow=') {
+                $this->buttonsWindow = (int) substr($flag, 14);
+                $this->pagination = true;
             }
 
             if (isset($this->column[$flag]) && $flag !== 'page') {
@@ -354,7 +382,12 @@ class helper_plugin_pagelist extends DokuWiki_Plugin
             if ($callerClass) {
                 $class .= ' ' . $callerClass;
             }
-            $this->doc = '<div class="table"><table class="' . $class . '">';
+            $this->doc = '<div class="table"><table class="' . $class;
+            //If pagination is active, add class and embedded data to the table tag 
+            if($this->pagination) {
+                $this->doc .= ' table-with-pagination" data-rowsPerPage="' . $this->rowsPerPage . '" data-buttonsPosition="' . $this->buttonsPosition . '" data-buttonwindow="' . $this->buttonsWindow;
+            }
+            $this->doc .= '">';
         } else {
             // Simplelist is enabled; Skip header and firsthl
             $this->showheader = false;
@@ -547,6 +580,11 @@ class helper_plugin_pagelist extends DokuWiki_Plugin
         }
         if (!empty($this->page['class'])) {
             $class .= $this->page['class'];
+        }
+
+        //If pagination is in use, all the rows start hidden (for fix 'flickering' onload)
+        if ($this->pagination) {
+            $class .= 'hidden ';
         }
 
         if (!empty($class)) {
