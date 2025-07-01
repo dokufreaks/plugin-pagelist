@@ -5,6 +5,7 @@
  *
  * @license    GPL 2 (http://www.gnu.org/licenses/gpl.html)
  *
+ * @author Daniel Dias Rodrigues <danieldiasr@gmail.com>
  * @author Gilson Caldeira <gilsoncaldeira@gmail.com>
  * @author Felipe Castro <fefcas@yahoo.com.br>
  */
@@ -36,3 +37,4 @@ $lang['showimage']             = 'mostre a coluna da imagem (é necessário o pl
 $lang['showdiff']              = 'mostre o link para a página de diferenças';
 $lang['sort']                  = 'classificar páginas por nome de página';
 $lang['rsort']                 = 'páginas de classificação reversa por nome de página';
+$lang['sortby']                = 'classifique a página pelo item fornecido, p. e. code>id</code>, <code>pagename</code>, <code>ns</code>, <code>title</code>, <code>date</code>, <code>desc</code>, <code>user</code> etc, ou colunas de plugins';
