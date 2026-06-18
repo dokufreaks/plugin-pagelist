@@ -16,3 +16,7 @@ $conf['showdiff']     = 0;
 $conf['sort']         = 0;
 $conf['rsort']        = 0;
 $conf['sortby']       = '';
+$conf['pagination']         = 0;
+$conf['rowsperpage']        = 10;
+$conf['buttonsposition']    = 'bottom';
+$conf['buttonswindow']      = 3;

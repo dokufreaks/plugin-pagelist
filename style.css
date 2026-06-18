@@ -55,3 +55,12 @@ div.dokuwiki table.pagelist td.page,
 div.dokuwiki table.ul td.page {
   font-size: 100%;
 }
+
+div.dokuwiki button.pagination-button.active {
+  font-weight: bold;
+}
+
+td.pagination-buttons-container {
+  text-align: center;
+  background: none !important;
+}
