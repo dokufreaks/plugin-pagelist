@@ -16,3 +16,4 @@ $conf['showdiff']     = 0;
 $conf['sort']         = 0;
 $conf['rsort']        = 0;
 $conf['sortby']       = '';
+$conf['metaparentname'] = '';

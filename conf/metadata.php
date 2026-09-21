@@ -21,3 +21,4 @@ $meta['showimage']    = array('onoff');
 $meta['sort']         = array('onoff');
 $meta['rsort']        = array('onoff');
 $meta['sortby']       = array('string', '_pattern' => '/^([^&=]*)$/');
+$meta['metaparentname']  = array('string', '_pattern' => '/^([^&=]*)$/');
